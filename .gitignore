@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Build output (none currently, kept for future)
+dist/

@@ -1,0 +1,12 @@
+{
+  "name": "argh",
+  "version": "1.0.0",
+  "description": "A stress-relief mini-game: smash the frustrating AI chat bubbles to vent.",
+  "keywords": ["game", "stress-relief", "canvas", "web-game", "no-dependencies"],
+  "license": "MIT",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "npx --yes serve ."
+  },
+  "private": true
+}
