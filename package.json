@@ -5,8 +5,7 @@
   "keywords": ["game", "stress-relief", "canvas", "web-game", "no-dependencies"],
   "license": "MIT",
   "scripts": {
-    "start": "python3 -m http.server 8000",
-    "serve": "npx --yes serve ."
+    "start": "npx --yes serve . -l 8000"
   },
   "private": true
 }

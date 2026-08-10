@@ -13,18 +13,18 @@ to trigger a screen-shaking **MELTDOWN**. You have 60 seconds. Vent responsibly.
 
 ## Play
 
-It's a zero-dependency static site. Just open it, or serve the folder:
+It's a zero-dependency static site built with plain `<script>` tags (no ES
+modules, no `fetch`), so you can simply **open `index.html` in your browser** —
+no server required.
+
+If you'd rather serve it over HTTP (Node only, no other tooling):
 
 ```bash
-# Any static server works — pick one:
-python3 -m http.server 8000
+npm start
 #   → http://localhost:8000
-
-npx serve .
 ```
 
-Then open the printed URL in your browser. Works on desktop (mouse) and
-mobile (touch).
+Works on desktop (mouse) and mobile (touch).
 
 ## Features
 
