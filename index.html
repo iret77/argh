@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>ARGH! — Vent Your AI Frustration</title>
+  <meta name="description" content="A stress-relief mini-game. Claude drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
+  <meta name="theme-color" content="#0d0b1a" />
+
+  <!-- Open Graph / social -->
+  <meta property="og:title" content="ARGH! — Vent Your AI Frustration" />
+  <meta property="og:description" content="Claude drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Game canvas -->
+    <canvas id="game" aria-label="ARGH game canvas" role="img"></canvas>
+
+    <!-- Heads-up display -->
+    <div id="hud" class="hud" hidden>
+      <div class="hud-top">
+        <div class="hud-stat">
+          <span class="hud-label">SCORE</span>
+          <span id="score" class="hud-value">0</span>
+        </div>
+        <div class="hud-timer">
+          <span id="timer" class="hud-timer-value">60</span>
+          <span class="hud-timer-label">seconds left</span>
+        </div>
+        <div class="hud-stat hud-stat--right">
+          <span class="hud-label">BEST</span>
+          <span id="best" class="hud-value">0</span>
+        </div>
+      </div>
+
+      <div class="hud-rage">
+        <div class="hud-rage-track">
+          <div id="rageFill" class="hud-rage-fill"></div>
+        </div>
+        <span class="hud-rage-label">RAGE</span>
+      </div>
+
+      <div id="combo" class="combo" aria-live="polite"></div>
+    </div>
+
+    <!-- Start / menu screen -->
+    <div id="menu" class="overlay">
+      <div class="overlay-card">
+        <h1 class="logo">ARGH<span class="logo-bang">!</span></h1>
+        <p class="tagline">Claude drove you up the wall.<br />Now smash the nonsense out of your system.</p>
+
+        <div class="how-to">
+          <div class="how-to-item"><span class="how-to-emoji">👆</span> Tap the chat bubbles to smash them</div>
+          <div class="how-to-item"><span class="how-to-emoji">🔥</span> Chain hits to build a RAGE combo</div>
+          <div class="how-to-item"><span class="how-to-emoji">💥</span> Fill the meter to trigger a MELTDOWN</div>
+        </div>
+
+        <button id="startBtn" class="btn btn--primary" type="button">START VENTING</button>
+
+        <button id="muteBtnMenu" class="btn btn--ghost btn--sound" type="button" aria-pressed="false">
+          <span class="sound-on">🔊 Sound on</span>
+          <span class="sound-off">🔇 Sound off</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game over screen -->
+    <div id="gameover" class="overlay" hidden>
+      <div class="overlay-card">
+        <h2 class="gameover-title">TIME'S UP</h2>
+        <div class="gameover-rank" id="rank">Mildly Annoyed</div>
+
+        <div class="gameover-scores">
+          <div class="gameover-score">
+            <span class="hud-label">YOUR SCORE</span>
+            <span id="finalScore" class="gameover-big">0</span>
+          </div>
+          <div class="gameover-score">
+            <span class="hud-label">BEST</span>
+            <span id="finalBest" class="gameover-big gameover-big--muted">0</span>
+          </div>
+        </div>
+
+        <div id="newBest" class="gameover-newbest" hidden>🏆 New personal best!</div>
+
+        <div class="gameover-stats">
+          <span><b id="statSmashed">0</b> smashed</span>
+          <span><b id="statCombo">0×</b> best combo</span>
+          <span><b id="statMeltdowns">0</b> meltdowns</span>
+        </div>
+
+        <button id="againBtn" class="btn btn--primary" type="button">VENT AGAIN</button>
+        <button id="shareBtn" class="btn btn--ghost" type="button">Copy result</button>
+      </div>
+    </div>
+
+    <!-- In-game sound toggle -->
+    <button id="muteBtn" class="mute-toggle" type="button" aria-pressed="false" hidden title="Toggle sound">
+      <span class="sound-on">🔊</span>
+      <span class="sound-off">🔇</span>
+    </button>
+
+    <footer class="footer">
+      Built with <strong>Claude Opus&nbsp;4.8</strong> · to help you survive Sonnet&nbsp;5, Opus&nbsp;5 &amp; the occasional Fable&nbsp;5
+    </footer>
+  </div>
+
+  <script src="js/phrases.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
