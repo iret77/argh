@@ -10,7 +10,9 @@
   var PHRASES = window.ARGH_PHRASES;
   var TYPES = window.ARGH_TYPES;
   var GOLD = window.ARGH_GOLD;
+  var TYPE_ORDER = window.ARGH_TYPE_ORDER;
   var DEFAULT_TYPE = "overconfident";
+  var MAX_MODELS = 3;
 
   // ------------------------------------------------------------------ config
   var CONFIG = {
@@ -56,14 +58,28 @@
       .slice(0, 24);
   }
 
-  // Read ?ai= and ?model= from the URL. The game hard-codes no brand names;
-  // they arrive here (e.g. from the "argh" Claude skill) or via the setup form.
+  // Parse a comma-separated model list into up to MAX_MODELS clean names.
+  function parseModels(raw) {
+    if (!raw) return [];
+    return String(raw)
+      .split(",")
+      .map(sanitizeName)
+      .filter(Boolean)
+      .slice(0, MAX_MODELS);
+  }
+
+  // Read ?ai= and ?models= (or legacy ?model=) from the URL. The game
+  // hard-codes no brand names; they arrive here (e.g. from the "argh" Claude
+  // skill) or via the setup form.
   function readParams() {
     try {
       var p = new URLSearchParams(window.location.search);
-      return { ai: sanitizeName(p.get("ai")), model: sanitizeName(p.get("model")) };
+      return {
+        ai: sanitizeName(p.get("ai")),
+        models: parseModels(p.get("models") || p.get("model")),
+      };
     } catch (e) {
-      return { ai: "", model: "" };
+      return { ai: "", models: [] };
     }
   }
 
@@ -73,10 +89,10 @@
     this.ctx = this.canvas.getContext("2d");
     this.sound = new window.SoundEngine();
 
-    // Who are we venting at? Comes from ?ai=/?model= or the setup form.
+    // Who are we venting at? Comes from ?ai=/?models= or the setup form.
     var params = readParams();
-    this.ai = params.ai;        // e.g. "Claude" (never hard-coded)
-    this.model = params.model;  // e.g. "Opus 5" (optional)
+    this.ai = params.ai;          // e.g. "Claude" (never hard-coded)
+    this.models = params.models;  // up to 3 model names, optional
     this.configured = !!this.ai;
 
     this.dpr = 1;
@@ -158,7 +174,7 @@
       this.el.startBtn.disabled = false;
     } else {
       this.el.setup.hidden = false;
-      if (this.model) this.el.modelInput.value = this.model;
+      if (this.models.length) this.el.modelInput.value = this.models.join(", ");
       var refresh = function () {
         self.el.startBtn.disabled = sanitizeName(self.el.aiInput.value) === "";
       };
@@ -174,7 +190,7 @@
         var ai = sanitizeName(self.el.aiInput.value);
         if (!ai) { self.el.aiInput.focus(); return; }
         self.ai = ai;
-        self.model = sanitizeName(self.el.modelInput.value);
+        self.models = parseModels(self.el.modelInput.value);
         self.configured = true;
       }
       self.sound.resume();
@@ -305,7 +321,8 @@
   };
 
   Game.prototype._share = function () {
-    var target = this.ai ? (this.model ? this.ai + " " + this.model : this.ai) : "my AI";
+    var target = this.ai || "my AI";
+    if (this.models.length) target += " (" + this.models.join(", ") + ")";
     var txt = "I hit rank \"" + (this._lastRank || "Mildly Annoyed") +
       "\" venting my " + target + " frustration in ARGH! — score " + this.score +
       " (best combo " + this.bestCombo + "×). Smash your own nonsense.";
@@ -362,12 +379,15 @@
     this.bubbles.push(b);
   };
 
-  // The short label above a bubble's text: the player's model name if given,
-  // otherwise the generic personality label; golden bonuses read "BONUS".
+  // The short label above a bubble's text. Each personality type maps to one
+  // supplied model (by slot order); a slot without a model falls back to the
+  // neutral personality label. Golden bonuses read "BONUS".
   Game.prototype._tagFor = function (b) {
     if (b.golden) return "BONUS";
-    if (this.model) return this.model;
-    return (TYPES[b.type] || TYPES[DEFAULT_TYPE]).label;
+    var type = TYPES[b.type] ? b.type : DEFAULT_TYPE;
+    var slot = TYPE_ORDER.indexOf(type);
+    var model = slot >= 0 ? this.models[slot] : "";
+    return model || TYPES[type].label;
   };
 
   // Measure bubble size from wrapped text.

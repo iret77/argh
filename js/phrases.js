@@ -50,5 +50,13 @@ window.ARGH_TYPES = {
   hallucination: { label: "The Hallucinator",      color: "#ff8a5c", glow: "rgba(255,138,92,0.55)" },
 };
 
+/**
+ * Fixed slot order. Up to three player-supplied model names map onto these
+ * three types in order (models[0] → overconfident, [1] → apologetic,
+ * [2] → hallucination). Any slot without a supplied model falls back to the
+ * neutral label above.
+ */
+window.ARGH_TYPE_ORDER = ["overconfident", "apologetic", "hallucination"];
+
 /** Colour for the rare golden bonus bubble. */
 window.ARGH_GOLD = { color: "#ffd15c", glow: "rgba(255,209,92,0.6)" };

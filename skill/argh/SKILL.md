@@ -38,18 +38,23 @@ it playful; a little self-deprecation is good. Example shape:
 
 Base URL: `https://iret77.github.io/argh/`
 
-Append two query parameters, both URL-encoded (encode spaces as `%20`):
+Append these query parameters, all URL-encoded (encode spaces as `%20`):
 
 - `ai` — the assistant's product name as the user knows it (for you that is
   `Claude`).
-- `model` — your current model's display name if you know it (for example
-  `Opus 5`, `Sonnet 5`, `Fable 5`, or `Haiku 4.5`). If you are not reasonably
-  sure which model you are, **omit the `model` parameter entirely** rather than
-  guessing.
+- `models` — up to **three** model display names, comma-separated. Use the
+  model(s) the user is actually frustrated with. If they named one, pass that
+  one; otherwise pass your current model (for example `Opus 5`, `Sonnet 5`,
+  `Fable 5`, or `Haiku 4.5`). You may pass the current family as up to three
+  names. If you are not reasonably sure which model you are, **omit the
+  `models` parameter entirely** rather than guessing. In the game, the three
+  models map onto three bubble types; any missing slot falls back to a neutral
+  label, so passing fewer than three is fine.
 
 Examples:
 
-- Model known: `https://iret77.github.io/argh/?ai=Claude&model=Opus%205`
+- One model: `https://iret77.github.io/argh/?ai=Claude&models=Opus%205`
+- Three models: `https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205`
 - Model unknown: `https://iret77.github.io/argh/?ai=Claude`
 
 The game hard-codes no names — it simply displays whatever you pass here. That
@@ -61,4 +66,4 @@ game.
 - Do not add long explanations, disclaimers, or a wall of text. The whole point
   is a fast, satisfying escape hatch.
 - If the user vents about a *different* AI by name, put that name in `ai`
-  instead and drop `model` unless they mention one.
+  instead and drop `models` unless they mention one.

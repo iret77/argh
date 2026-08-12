@@ -30,20 +30,23 @@ Works on desktop (mouse) and mobile (touch).
 The game **hard-codes no brand or model names.** The AI you're venting at is
 supplied at runtime, in one of two ways:
 
-1. **URL parameters** — `?ai=<name>&model=<name>`, e.g.
-   [`?ai=Claude&model=Opus%205`](https://iret77.github.io/argh/?ai=Claude&model=Opus%205).
-   The name shows on the bubbles; the tagline greets you personally.
+1. **URL parameters** — `?ai=<name>&models=<a,b,c>` (up to three models,
+   comma-separated), e.g.
+   [`?ai=Claude&models=Opus%205,Sonnet%205,Fable%205`](https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205).
+   The names show on the bubbles; the tagline greets you personally.
+   (`?model=<name>` is still accepted as a single-model alias.)
 2. **Setup prompt** — open the game with no parameters and it asks *"Which AI
-   drove you up the wall?"* (plus an optional model) before the round starts.
+   drove you up the wall?"* (plus optional model(s)) before the round starts.
    Nothing is played until you answer.
 
-Inputs are sanitized (whitespace collapsed, capped at 24 characters) and only
-ever drawn as canvas text.
+Inputs are sanitized (whitespace collapsed, each name capped at 24 characters)
+and only ever drawn as canvas text.
 
 Bubble variety is brand-free by design: three made-up "personality types"
 (*The Overconfident One*, *The Apologizer*, *The Hallucinator*) drive the
-colour and a fallback label — the real model name, when supplied, is what
-appears on the bubble.
+colour and a fallback label. Up to three supplied model names map onto those
+three types in order; **any type without a supplied model keeps its neutral
+label**, so passing one, two, three, or zero models all work.
 
 ## The `argh` skill (optional)
 
