@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>ARGH! — Vent Your AI Frustration</title>
-  <meta name="description" content="A stress-relief mini-game. Claude drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
+  <meta name="description" content="A stress-relief mini-game. An AI drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
   <meta name="theme-color" content="#0d0b1a" />
 
   <!-- Open Graph / social -->
   <meta property="og:title" content="ARGH! — Vent Your AI Frustration" />
-  <meta property="og:description" content="Claude drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
+  <meta property="og:description" content="An AI drove you up the wall? Smash the frustrating chat bubbles and let it all out." />
   <meta property="og:type" content="website" />
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
@@ -51,7 +51,18 @@
     <div id="menu" class="overlay">
       <div class="overlay-card">
         <h1 class="logo">ARGH<span class="logo-bang">!</span></h1>
-        <p class="tagline">Claude drove you up the wall.<br />Now smash the nonsense out of your system.</p>
+        <p id="tagline" class="tagline">Blow off some steam.</p>
+
+        <!-- Setup: shown only when no ai/model URL params are present.
+             The game hard-codes no brand names — they come from here or the URL. -->
+        <form id="setup" class="setup" autocomplete="off">
+          <label class="setup-label" for="aiInput">Which AI drove you up the wall?</label>
+          <input id="aiInput" class="setup-input" type="text" maxlength="24"
+                 autocomplete="off" spellcheck="false" placeholder="e.g. your AI assistant" />
+          <label class="setup-label" for="modelInput">Which model? <span class="setup-opt">optional</span></label>
+          <input id="modelInput" class="setup-input" type="text" maxlength="24"
+                 autocomplete="off" spellcheck="false" placeholder="e.g. the latest one" />
+        </form>
 
         <div class="how-to">
           <div class="how-to-item"><span class="how-to-emoji">👆</span> Tap the chat bubbles to smash them</div>
@@ -59,7 +70,7 @@
           <div class="how-to-item"><span class="how-to-emoji">💥</span> Fill the meter to trigger a MELTDOWN</div>
         </div>
 
-        <button id="startBtn" class="btn btn--primary" type="button">START VENTING</button>
+        <button id="startBtn" class="btn btn--primary" type="button" disabled>START VENTING</button>
 
         <button id="muteBtnMenu" class="btn btn--ghost btn--sound" type="button" aria-pressed="false">
           <span class="sound-on">🔊 Sound on</span>
@@ -105,7 +116,7 @@
     </button>
 
     <footer class="footer">
-      Built with <strong>Claude Opus&nbsp;4.8</strong> · to help you survive Sonnet&nbsp;5, Opus&nbsp;5 &amp; the occasional Fable&nbsp;5
+      Built with <strong>Claude Opus&nbsp;4.8</strong> · an unofficial, fan-made stress-relief game
     </footer>
   </div>
 
