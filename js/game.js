@@ -69,7 +69,7 @@
   }
 
   // Read ?ai= and ?models= (or legacy ?model=) from the URL. The game
-  // hard-codes no brand names; they arrive here (e.g. from the "argh" Claude
+  // hard-codes no brand names; they arrive here (e.g. from the "argh"
   // skill) or via the setup form.
   function readParams() {
     try {
@@ -91,7 +91,7 @@
 
     // Who are we venting at? Comes from ?ai=/?models= or the setup form.
     var params = readParams();
-    this.ai = params.ai;          // e.g. "Claude" (never hard-coded)
+    this.ai = params.ai;          // the AI the player named (never hard-coded)
     this.models = params.models;  // up to 3 model names, optional
     this.configured = !!this.ai;
 

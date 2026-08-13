@@ -19,7 +19,7 @@ AAAARGH
 …and the assistant responds with a short, light line plus a link such as:
 
 ```
-https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205
+https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>
 ```
 
 (`models` takes up to three comma-separated names; pass fewer, or none, and the

@@ -37,11 +37,10 @@ Works on desktop (mouse) and mobile (touch).
 The game **hard-codes no brand or model names.** The AI you're smashing is
 supplied at runtime, in one of two ways:
 
-1. **URL parameters:** `?ai=<name>&models=<a,b,c>` (up to three models,
-   comma-separated), e.g.
-   [`?ai=Claude&models=Opus%205,Sonnet%205,Fable%205`](https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205).
-   The names show on the bubbles; the tagline greets you personally.
-   (`?model=<name>` is still accepted as a single-model alias.)
+1. **URL parameters:** `?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>`
+   (up to three models, comma-separated). The names you pass show on the
+   bubbles; the tagline greets you personally. (`?model=<name>` is still
+   accepted as a single-model alias.)
 2. **Setup prompt:** open the game with no parameters and it asks *"Which AI
    drove you up the wall?"* (plus optional model(s)) before the round starts.
    Nothing is played until you answer.
