@@ -8,22 +8,13 @@ in the same session that just annoyed you.
 ## The setup prompt
 
 ```
-Set up the "ARGH!" skill for me.
-
-Read https://iret77.github.io/argh/skill/argh/SKILL.md in full, then install it
-as a persistent skill that survives across sessions:
-- If you are Claude (Claude Code / Desktop): save it to
-  ~/.claude/skills/argh/SKILL.md
-- Otherwise (e.g. an OpenAI/Codex agent): add an equivalent persistent
-  instruction to your AGENTS.md (or your memory / custom-instructions file).
-
-Show me exactly what you will write and wait for my OK before saving. Once
-installed: whenever I type "argh", "aaaargh" or similar frustration, reply with
-the ARGH! game link with ?ai= and ?models= filled in from this session. Just a
-short line plus the link, nothing else.
+Set up the "ARGH!" skill for me: read https://iret77.github.io/argh/skill/argh/SKILL.md and install it as a persistent skill in your harness. Show me what you'll save, then confirm.
 ```
 
-That's it. The agent shows you what it will save, you confirm, done.
+That's it. The agent reads the skill (which contains all the behaviour),
+installs it wherever it keeps skills, shows you what it will save, and you
+confirm. Everything about *what the skill does* lives in `SKILL.md`, not in this
+prompt.
 
 ## Using it
 
