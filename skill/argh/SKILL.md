@@ -44,22 +44,20 @@ Base URL: `https://iret77.github.io/argh/`
 
 Append these query parameters, all URL-encoded (encode spaces as `%20`):
 
-- `ai`: the assistant's product name as the user knows it (for you that is
-  `Claude`).
+- `ai`: your own product name, as the user knows it.
 - `models`: up to **three** model display names, comma-separated. Use the
   model(s) the user is actually frustrated with. If they named one, pass that
-  one; otherwise pass your current model (for example `Opus 5`, `Sonnet 5`,
-  `Fable 5`, or `Haiku 4.5`). You may pass the current family as up to three
-  names. If you are not reasonably sure which model you are, **omit the
+  one; otherwise pass your current model's display name. You may pass up to
+  three names. If you are not reasonably sure which model you are, **omit the
   `models` parameter entirely** rather than guessing. In the game, the three
   models map onto three bubble types; any missing slot falls back to a neutral
   label, so passing fewer than three is fine.
 
-Examples:
+Examples (fill in your own name and model; URL-encode spaces as %20):
 
-- One model: `https://iret77.github.io/argh/?ai=Claude&models=Opus%205`
-- Three models: `https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205`
-- Model unknown: `https://iret77.github.io/argh/?ai=Claude`
+- One model: `https://iret77.github.io/argh/?ai=<your-ai>&models=<your-model>`
+- Three models: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>`
+- Model unknown: `https://iret77.github.io/argh/?ai=<your-ai>`
 
 The game hard-codes no names; it simply displays whatever you pass here. That
 keeps the brand reference tied to the live session rather than baked into the

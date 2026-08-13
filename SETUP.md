@@ -8,7 +8,7 @@ in the same session that just annoyed you.
 ## The setup prompt
 
 ```
-Set up the "ARGH!" skill for me: read https://iret77.github.io/argh/skill/argh/SKILL.md and install it as a persistent skill in your harness. Show me what you'll save, then confirm.
+Set up the "ARGH!" skill for me: read https://iret77.github.io/argh/skill/argh/SKILL.md and install it. Show me what you'll save, then confirm.
 ```
 
 That's it. The agent reads the skill (which contains all the behaviour),
@@ -27,7 +27,7 @@ aaaargh
 The agent replies with something like:
 
 > Oof, that one's on me. Go smash some chat bubbles:
-> https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205
+> https://iret77.github.io/argh/?ai=<your-ai>&models=<your-models>
 
 ## Uninstalling
 
