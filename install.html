@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ARGH! — Install the vent skill</title>
+  <meta name="description" content="Paste one prompt into your AI agent. Then type 'argh' any time to blow off steam — in the same session that annoyed you." />
+  <meta name="theme-color" content="#0d0b1a" />
+  <meta property="og:title" content="ARGH! — vent at your AI in one session" />
+  <meta property="og:description" content="Paste one prompt into Claude or Codex. Then just type 'argh' to vent." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <style>
+    :root {
+      --bg-0:#0d0b1a; --bg-1:#171233; --ink:#f4f1ff; --ink-dim:#b7b0d8;
+      --accent:#ff3b6b; --accent-2:#ffb63b; --accent-3:#7b5cff; --good:#34e0a1;
+      --panel:rgba(20,16,44,0.82); --panel-border:rgba(123,92,255,0.35);
+      --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;min-height:100%;}
+    body{
+      font-family:var(--font); color:var(--ink);
+      background:radial-gradient(ellipse at 50% -10%,rgba(123,92,255,0.22),transparent 55%),
+                 linear-gradient(180deg,var(--bg-0),var(--bg-1));
+      -webkit-font-smoothing:antialiased; padding:40px 20px 28px;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .wrap{width:min(620px,100%);}
+    .logo{
+      font-size:clamp(56px,16vw,92px); font-weight:900; line-height:0.9; margin:0;
+      text-align:center; letter-spacing:-0.04em;
+      background:linear-gradient(180deg,#fff,var(--accent-2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter:drop-shadow(0 6px 26px rgba(255,59,107,0.4));
+    }
+    .logo span{color:var(--accent);-webkit-text-fill-color:var(--accent);}
+    .lede{text-align:center;color:var(--ink-dim);font-size:17px;line-height:1.5;margin:8px 0 4px;}
+    .lede b{color:var(--ink);}
+    .targets{
+      display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 6px;
+      font-size:13px;color:var(--ink-dim);
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05);
+      border-radius:99px; padding:6px 14px; font-weight:700;
+    }
+    .card{
+      background:var(--panel); border:1px solid var(--panel-border);
+      border-radius:18px; padding:18px; margin-top:14px; box-shadow:0 24px 60px rgba(0,0,0,0.5);
+    }
+    .card-label{
+      display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+      letter-spacing:0.06em;color:var(--ink-dim);margin-bottom:10px;
+    }
+    pre#prompt{
+      margin:0; white-space:pre-wrap; word-break:break-word;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:13.5px; line-height:1.6; color:#e9e5ff;
+      background:rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.08);
+      border-radius:12px; padding:14px; max-height:320px; overflow:auto;
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border:none;border-radius:13px;font-family:inherit;font-weight:800;cursor:pointer;
+      transition:transform .12s ease,box-shadow .2s ease,background .2s ease;
+    }
+    .btn:active{transform:translateY(1px) scale(.99);}
+    .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+    .btn--primary{
+      flex:1;min-width:180px;padding:15px 18px;font-size:16px;color:#fff;
+      background:linear-gradient(135deg,var(--accent),var(--accent-3));
+      box-shadow:0 12px 30px rgba(255,59,107,0.4);
+    }
+    .btn--primary:hover{box-shadow:0 16px 40px rgba(255,59,107,0.55);transform:translateY(-1px);}
+    .btn--ghost{
+      padding:15px 18px;font-size:15px;color:var(--ink-dim);
+      background:rgba(255,255,255,0.06);text-decoration:none;
+    }
+    .btn--ghost:hover{color:var(--ink);background:rgba(255,255,255,0.1);}
+    .steps{margin:22px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+    .steps li{
+      display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink);
+      background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+      border-radius:12px;padding:11px 14px;
+    }
+    .steps b{background:var(--accent-3);color:#fff;border-radius:99px;min-width:22px;height:22px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto;}
+    .play{text-align:center;margin-top:20px;font-size:14px;}
+    .play a{color:var(--accent-2);font-weight:700;text-decoration:none;}
+    .play a:hover{text-decoration:underline;}
+    .foot{text-align:center;color:rgba(183,176,216,0.6);font-size:11.5px;margin-top:24px;line-height:1.5;}
+    .foot strong{color:rgba(244,241,255,0.85);}
+    .foot a{color:inherit;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="logo">ARGH<span>!</span></h1>
+    <p class="lede"><b>Vent at your AI — in the very session that annoyed you.</b><br />
+      Paste one prompt into your agent. Then just type <b>argh</b> any time to blow off steam.</p>
+
+    <div class="targets">
+      <span class="chip">Claude Code</span>
+      <span class="chip">Claude Desktop</span>
+      <span class="chip">OpenAI / Codex</span>
+    </div>
+
+    <div class="card">
+      <div class="card-label">💬 Paste this prompt into your agent</div>
+      <pre id="prompt">Set up the "ARGH!" vent skill for me.
+
+Read https://iret77.github.io/argh/skill/argh/SKILL.md in full, then install it as a persistent skill that survives across sessions:
+- If you are Claude (Claude Code / Desktop): save it to ~/.claude/skills/argh/SKILL.md
+- Otherwise (e.g. an OpenAI/Codex agent): add an equivalent persistent instruction to your AGENTS.md (or your memory / custom-instructions file).
+
+Show me exactly what you will write and wait for my OK before saving. Once installed: whenever I type "argh", "aaaargh" or similar frustration, reply with the ARGH! game link with ?ai= and ?models= filled in from this session — a short line plus the link, nothing else.</pre>
+
+      <div class="actions">
+        <button id="copyBtn" class="btn btn--primary" type="button">📋 Copy prompt</button>
+        <a class="btn btn--ghost" href="https://github.com/iret77/argh" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><b>1</b><span>Paste the prompt into Claude or your Codex/OpenAI agent and confirm the install.</span></li>
+      <li><b>2</b><span>Next time it drives you up the wall, type <b>argh</b> — you'll get a link to vent instantly.</span></li>
+      <li><b>3</b><span>Done venting? Delete or disable the skill. No accounts, no traces.</span></li>
+    </ol>
+
+    <p class="play">…or just <a href="./">smash some bubbles once →</a></p>
+
+    <p class="foot">
+      Built with <strong>Claude&nbsp;Opus&nbsp;4.8</strong> · an unofficial, fan-made stress-relief game<br />
+      Not affiliated with, endorsed by, or sponsored by any AI provider.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("copyBtn");
+      var pre = document.getElementById("prompt");
+      btn.addEventListener("click", function () {
+        var text = pre.textContent;
+        var done = function () {
+          var old = btn.textContent;
+          btn.textContent = "✓ Copied!";
+          setTimeout(function () { btn.textContent = old; }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { select(); done(); });
+        } else {
+          select(); done();
+        }
+        function select() {
+          var r = document.createRange();
+          r.selectNodeContents(pre);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(r);
+          try { document.execCommand("copy"); } catch (e) {}
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

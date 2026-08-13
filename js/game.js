@@ -8,7 +8,11 @@
   "use strict";
 
   var PHRASES = window.ARGH_PHRASES;
-  var MODELS = window.ARGH_MODELS;
+  var TYPES = window.ARGH_TYPES;
+  var GOLD = window.ARGH_GOLD;
+  var TYPE_ORDER = window.ARGH_TYPE_ORDER;
+  var DEFAULT_TYPE = "overconfident";
+  var MAX_MODELS = 3;
 
   // ------------------------------------------------------------------ config
   var CONFIG = {
@@ -42,11 +46,54 @@
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function lerp(a, b, t) { return a + (b - a) * t; }
 
+  // Clean a user/URL-supplied name: strip control chars, collapse whitespace,
+  // cap length. Rendered only as canvas text (no markup), so this is display
+  // hygiene rather than an HTML-injection guard.
+  function sanitizeName(s) {
+    if (!s) return "";
+    return String(s)
+      .replace(/[\u0000-\u001f\u007f]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 24);
+  }
+
+  // Parse a comma-separated model list into up to MAX_MODELS clean names.
+  function parseModels(raw) {
+    if (!raw) return [];
+    return String(raw)
+      .split(",")
+      .map(sanitizeName)
+      .filter(Boolean)
+      .slice(0, MAX_MODELS);
+  }
+
+  // Read ?ai= and ?models= (or legacy ?model=) from the URL. The game
+  // hard-codes no brand names; they arrive here (e.g. from the "argh" Claude
+  // skill) or via the setup form.
+  function readParams() {
+    try {
+      var p = new URLSearchParams(window.location.search);
+      return {
+        ai: sanitizeName(p.get("ai")),
+        models: parseModels(p.get("models") || p.get("model")),
+      };
+    } catch (e) {
+      return { ai: "", models: [] };
+    }
+  }
+
   // ------------------------------------------------------------------ engine
   function Game() {
     this.canvas = document.getElementById("game");
     this.ctx = this.canvas.getContext("2d");
     this.sound = new window.SoundEngine();
+
+    // Who are we venting at? Comes from ?ai=/?models= or the setup form.
+    var params = readParams();
+    this.ai = params.ai;          // e.g. "Claude" (never hard-coded)
+    this.models = params.models;  // up to 3 model names, optional
+    this.configured = !!this.ai;
 
     this.dpr = 1;
     this.w = 0;
@@ -114,9 +161,38 @@
       statSmashed: document.getElementById("statSmashed"),
       statCombo: document.getElementById("statCombo"),
       statMeltdowns: document.getElementById("statMeltdowns"),
+      tagline: document.getElementById("tagline"),
+      setup: document.getElementById("setup"),
+      aiInput: document.getElementById("aiInput"),
+      modelInput: document.getElementById("modelInput"),
+      startBtn: document.getElementById("startBtn"),
     };
 
-    document.getElementById("startBtn").addEventListener("click", function () {
+    // Setup form: only shown when no ai/model came from the URL.
+    if (this.configured) {
+      this.el.setup.hidden = true;
+      this.el.startBtn.disabled = false;
+    } else {
+      this.el.setup.hidden = false;
+      if (this.models.length) this.el.modelInput.value = this.models.join(", ");
+      var refresh = function () {
+        self.el.startBtn.disabled = sanitizeName(self.el.aiInput.value) === "";
+      };
+      this.el.aiInput.addEventListener("input", refresh);
+      this.el.setup.addEventListener("submit", function (e) { e.preventDefault(); });
+      refresh();
+    }
+    this._updateTagline();
+
+    this.el.startBtn.addEventListener("click", function () {
+      // Pull names from the form when they didn't come from the URL.
+      if (!self.configured) {
+        var ai = sanitizeName(self.el.aiInput.value);
+        if (!ai) { self.el.aiInput.focus(); return; }
+        self.ai = ai;
+        self.models = parseModels(self.el.modelInput.value);
+        self.configured = true;
+      }
       self.sound.resume();
       self.sound.click();
       self.start();
@@ -196,6 +272,14 @@
     }
   };
 
+  // Personalise the menu subtitle once we know who we're venting at.
+  Game.prototype._updateTagline = function () {
+    if (!this.el || !this.el.tagline) return;
+    this.el.tagline.textContent = this.ai
+      ? this.ai + " drove you up the wall. Now smash the nonsense out of your system."
+      : "Blow off some steam.";
+  };
+
   // -------------------------------------------------------------- state flow
   Game.prototype.start = function () {
     this.reset();
@@ -237,8 +321,10 @@
   };
 
   Game.prototype._share = function () {
+    var target = this.ai || "my AI";
+    if (this.models.length) target += " (" + this.models.join(", ") + ")";
     var txt = "I hit rank \"" + (this._lastRank || "Mildly Annoyed") +
-      "\" venting my AI frustration in ARGH! — score " + this.score +
+      "\" venting my " + target + " frustration in ARGH! — score " + this.score +
       " (best combo " + this.bestCombo + "×). Smash your own nonsense.";
     var done = function () {
       var b = document.getElementById("shareBtn");
@@ -266,7 +352,7 @@
     var tough = !golden && Math.random() < CONFIG.toughChance;
 
     var phrase = golden
-      ? { text: "★ RARE: a helpful answer!", model: "fable" }
+      ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
       : pick(PHRASES);
 
     var rise = lerp(CONFIG.baseRise, CONFIG.maxRise, d) * (this.inMeltdown ? 0.7 : 1);
@@ -274,7 +360,7 @@
 
     var b = {
       text: phrase.text,
-      model: phrase.model,
+      type: phrase.type || DEFAULT_TYPE,
       golden: golden,
       hp: tough ? 3 : 1,
       maxHp: tough ? 3 : 1,
@@ -291,6 +377,17 @@
     this._measure(b);
     b.x = rand(b.hw + 12, this.w - b.hw - 12);
     this.bubbles.push(b);
+  };
+
+  // The short label above a bubble's text. Each personality type maps to one
+  // supplied model (by slot order); a slot without a model falls back to the
+  // neutral personality label. Golden bonuses read "BONUS".
+  Game.prototype._tagFor = function (b) {
+    if (b.golden) return "BONUS";
+    var type = TYPES[b.type] ? b.type : DEFAULT_TYPE;
+    var slot = TYPE_ORDER.indexOf(type);
+    var model = slot >= 0 ? this.models[slot] : "";
+    return model || TYPES[type].label;
   };
 
   // Measure bubble size from wrapped text.
@@ -319,8 +416,13 @@
     for (var j = 0; j < lines.length; j++) {
       textW = Math.max(textW, ctx.measureText(lines[j]).width);
     }
+    // Make sure the bubble is wide enough for its tag too.
+    ctx.font = "800 10px " + getFont();
+    var tagText = ((b.golden ? "✦ " : "") + this._tagFor(b)).toUpperCase();
+    var tagW = ctx.measureText(tagText).width + (b.tough ? 30 : 0);
+
     var padX = 18, padY = 14, tagH = 16, lineH = fontSize + 5;
-    b.w = textW + padX * 2;
+    b.w = Math.max(textW, tagW) + padX * 2;
     b.h = lines.length * lineH + padY * 2 + tagH;
     b.hw = b.w / 2;
     b.hh = b.h / 2;
@@ -352,8 +454,8 @@
     b.hp -= 1;
     this.shake = Math.min(this.shake + (b.golden ? 12 : 7), 22);
 
-    var m = MODELS[b.model] || MODELS.opus;
-    this._burst(px, py, b.golden ? MODELS.fable.color : m.color, b.golden ? 26 : 14);
+    var m = TYPES[b.type] || TYPES[DEFAULT_TYPE];
+    this._burst(px, py, b.golden ? GOLD.color : m.color, b.golden ? 26 : 14);
 
     if (b.hp > 0) {
       // Tough bubble: cracked but not destroyed.
@@ -377,9 +479,9 @@
     this.rage = clamp(this.rage + CONFIG.ragePerSmash, 0, CONFIG.rageMax);
 
     // Bigger shockwave + shards on kill.
-    this._burst(px, py, b.golden ? MODELS.fable.color : m.color, b.golden ? 30 : 18);
+    this._burst(px, py, b.golden ? GOLD.color : m.color, b.golden ? 30 : 18);
     this.shockwaves.push({ x: px, y: py, r: 6, max: b.golden ? 130 : 74, a: 0.7 });
-    this.floaters.push(makeFloater(b.x, b.y, "+" + gained, b.golden ? MODELS.fable.color : "#fff", b.golden ? 30 : 22));
+    this.floaters.push(makeFloater(b.x, b.y, "+" + gained, b.golden ? GOLD.color : "#fff", b.golden ? 30 : 22));
 
     if (b.golden) this.sound.bonus();
     else this.sound.smash(this.combo);
@@ -626,9 +728,10 @@
 
   Game.prototype._drawBubble = function (b) {
     var ctx = this.ctx;
-    var m = MODELS[b.model] || MODELS.opus;
-    var color = b.golden ? MODELS.fable.color : m.color;
-    var glow = b.golden ? MODELS.fable.glow : m.glow;
+    var m = TYPES[b.type] || TYPES[DEFAULT_TYPE];
+    var color = b.golden ? GOLD.color : m.color;
+    var glow = b.golden ? GOLD.glow : m.glow;
+    var tag = this._tagFor(b);
 
     ctx.save();
     ctx.translate(b.x, b.y);
@@ -658,12 +761,12 @@
     ctx.fillStyle = damaged ? "rgba(40,28,60,0.95)" : "rgba(28,22,54,0.94)";
     ctx.fill();
 
-    // Model tag.
+    // Tag (player's model / generic personality / BONUS).
     ctx.fillStyle = color;
     ctx.font = "800 10px " + getFont();
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText((b.golden ? "✦ " : "") + m.label.toUpperCase(), -w / 2 + 16, -h / 2 + 10);
+    ctx.fillText((b.golden ? "✦ " : "") + tag.toUpperCase(), -w / 2 + 16, -h / 2 + 10);
 
     // Text lines.
     ctx.fillStyle = "#f4f1ff";
