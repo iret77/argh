@@ -311,6 +311,18 @@ html, body {
 
 .btn--sound { width: 100%; }
 
+.menu-link {
+  display: block;
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-2);
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.menu-link:hover { opacity: 1; transform: translateY(-1px); text-decoration: underline; }
+
 /* Sound toggle state (label swapping) */
 .sound-off { display: none; }
 .btn--sound[aria-pressed="true"] .sound-on,

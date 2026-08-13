@@ -48,13 +48,23 @@ colour and a fallback label. Up to three supplied model names map onto those
 three types in order; **any type without a supplied model keeps its neutral
 label**, so passing one, two, three, or zero models all work.
 
-## The `argh` skill (optional)
+## The `argh` skill — vent inside your AI chat
 
-`skill/` contains an installable **Claude skill**. Once installed, typing
-`ARGH` / `AAAARGH` in the prompt makes the assistant reply with a game link
-that already has `ai` and `model` filled in from the current session — so the
-name is never hard-coded, it's generated on the fly. See
-[`skill/README.md`](skill/README.md) for installation.
+The point of ARGH! is venting **in the same session that annoyed you**. So the
+main way in is a tiny skill you install into your agent with a single
+copy-paste prompt — then typing `argh` any time hands you a game link with the
+AI/model filled in from that session.
+
+- **One-paste setup (Claude *and* OpenAI/Codex):** see [`SETUP.md`](SETUP.md),
+  or the friendly landing page at
+  [`install.html`](https://iret77.github.io/argh/install.html).
+- **The skill itself:** [`skill/argh/SKILL.md`](skill/argh/SKILL.md)
+  (agent-agnostic behaviour). Manual install notes in
+  [`skill/README.md`](skill/README.md).
+- **Uninstall:** delete or disable the skill — no accounts, no traces.
+
+The skill is the viral unit: share the prompt (or the install link), paste,
+done.
 
 ## Features
 

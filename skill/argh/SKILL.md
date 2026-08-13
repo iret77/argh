@@ -12,6 +12,10 @@ description: >-
 
 # argh — vent link responder
 
+These instructions are agent-agnostic: follow them whether you are Claude, an
+OpenAI/Codex-style agent, or anything else — persist them wherever your agent
+keeps skills or custom instructions.
+
 The user is frustrated with the AI and wants to let off steam. Hand them the
 game, don't try to "fix" their feelings or over-apologize.
 
