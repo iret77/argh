@@ -42,7 +42,7 @@ mkdir -p .claude/skills && cp -r skill/argh .claude/skills/argh
 mkdir -p ~/.claude/skills && cp -r skill/argh ~/.claude/skills/argh
 ```
 
-Then start (or restart) Claude Code — it picks up `SKILL.md` automatically.
+Then start (or restart) Claude Code; it picks up `SKILL.md` automatically.
 
 ### claude.ai
 

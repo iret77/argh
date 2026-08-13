@@ -1,5 +1,5 @@
 /**
- * ARGH! — a stress-relief mini-game.
+ * ARGH! A stress-relief mini-game.
  * Smash the frustrating AI chat bubbles to vent.
  *
  * Vanilla JS + HTML5 Canvas, no build step, no dependencies.
@@ -324,7 +324,7 @@
     var target = this.ai || "my AI";
     if (this.models.length) target += " (" + this.models.join(", ") + ")";
     var txt = "I hit rank \"" + (this._lastRank || "Mildly Annoyed") +
-      "\" venting my " + target + " frustration in ARGH! — score " + this.score +
+      "\" smashing my " + target + " frustration in ARGH!, score " + this.score +
       " (best combo " + this.bestCombo + "×). Smash your own nonsense.";
     var done = function () {
       var b = document.getElementById("shareBtn");

@@ -1,19 +1,19 @@
 ---
 name: argh
 description: >-
-  When the user vents raw frustration at the AI — a message that is essentially
+  When the user vents raw frustration at the AI, a message that is essentially
   a scream like "ARGH", "AAAARGH", "AARGH", "UGH", "GRRR", or an explicit "I
-  need to vent / blow off steam / rage-quit" aimed at the assistant — reply with
+  need to vent / blow off steam / rage-quit" aimed at the assistant, reply with
   a link to the ARGH! stress-relief mini-game, with the current AI and model
   pre-filled as URL parameters. Do NOT trigger for normal questions, for
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 ---
 
-# argh — vent link responder
+# argh: the vent-link responder
 
 These instructions are agent-agnostic: follow them whether you are Claude, an
-OpenAI/Codex-style agent, or anything else — persist them wherever your agent
+OpenAI/Codex-style agent, or anything else. Persist them wherever your agent
 keeps skills or custom instructions.
 
 The user is frustrated with the AI and wants to let off steam. Hand them the
@@ -29,7 +29,7 @@ Trigger only when the message is *venting at the assistant*, e.g.:
   "I want to smash something", "give me the rage game".
 
 Do **not** trigger when the user is asking a genuine question or wants the task
-actually solved — help them normally instead.
+actually solved, help them normally instead.
 
 ## What to do
 
@@ -44,9 +44,9 @@ Base URL: `https://iret77.github.io/argh/`
 
 Append these query parameters, all URL-encoded (encode spaces as `%20`):
 
-- `ai` — the assistant's product name as the user knows it (for you that is
+- `ai`: the assistant's product name as the user knows it (for you that is
   `Claude`).
-- `models` — up to **three** model display names, comma-separated. Use the
+- `models`: up to **three** model display names, comma-separated. Use the
   model(s) the user is actually frustrated with. If they named one, pass that
   one; otherwise pass your current model (for example `Opus 5`, `Sonnet 5`,
   `Fable 5`, or `Haiku 4.5`). You may pass the current family as up to three
@@ -61,7 +61,7 @@ Examples:
 - Three models: `https://iret77.github.io/argh/?ai=Claude&models=Opus%205,Sonnet%205,Fable%205`
 - Model unknown: `https://iret77.github.io/argh/?ai=Claude`
 
-The game hard-codes no names — it simply displays whatever you pass here. That
+The game hard-codes no names; it simply displays whatever you pass here. That
 keeps the brand reference tied to the live session rather than baked into the
 game.
 
