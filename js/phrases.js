@@ -27,7 +27,7 @@ window.ARGH_PHRASES = [
   { text: "I cannot assist with that request.", type: "apologetic" },
   { text: "You're absolutely right to flag that!", type: "overconfident" },
   { text: "Here is the complete solution:", type: "overconfident" },
-  { text: "Sorry about that — try this instead.", type: "apologetic" },
+  { text: "Sorry about that, try this instead.", type: "apologetic" },
   { text: "I appreciate your patience.", type: "apologetic" },
   { text: "Let me refactor the whole thing.", type: "overconfident" },
   { text: "That should work now. (It won't.)", type: "hallucination" },

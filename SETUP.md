@@ -2,13 +2,13 @@
 
 Paste **one** prompt into your AI agent (Claude Code, Claude Desktop, or an
 OpenAI/Codex-style agent). It installs a tiny persistent skill; after that,
-whenever you type `argh`, you get a one-click link to vent — in the same
-session that just annoyed you.
+whenever you type `argh`, you get a one-click link to smash your frustration
+in the same session that just annoyed you.
 
 ## The setup prompt
 
 ```
-Set up the "ARGH!" vent skill for me.
+Set up the "ARGH!" skill for me.
 
 Read https://iret77.github.io/argh/skill/argh/SKILL.md in full, then install it
 as a persistent skill that survives across sessions:
@@ -19,8 +19,8 @@ as a persistent skill that survives across sessions:
 
 Show me exactly what you will write and wait for my OK before saving. Once
 installed: whenever I type "argh", "aaaargh" or similar frustration, reply with
-the ARGH! game link with ?ai= and ?models= filled in from this session — a short
-line plus the link, nothing else.
+the ARGH! game link with ?ai= and ?models= filled in from this session. Just a
+short line plus the link, nothing else.
 ```
 
 That's it. The agent shows you what it will save, you confirm, done.

@@ -1,5 +1,5 @@
 /**
- * SoundEngine — all sound effects are synthesized with the Web Audio API,
+ * SoundEngine: all sound effects are synthesized with the Web Audio API,
  * so the game ships with zero audio assets and works fully offline.
  */
 (function () {
@@ -38,7 +38,7 @@
     return this.ctx ? this.ctx.currentTime : 0;
   };
 
-  // A short filtered noise burst — the satisfying "crunch".
+  // A short filtered noise burst: the satisfying "crunch".
   SoundEngine.prototype._noise = function (dur, vol, filterFreq) {
     if (!this.ready || this.muted) return;
     var ctx = this.ctx;
@@ -88,12 +88,12 @@
     this._tone(base, 0.12, 0.28, "square", base * 0.5);
   };
 
-  /** A miss — dull, low thud. */
+  /** A miss: dull, low thud. */
   SoundEngine.prototype.miss = function () {
     this._tone(90, 0.12, 0.12, "sine", 60);
   };
 
-  /** Meltdown begins — rising sweep. */
+  /** Meltdown begins: rising sweep. */
   SoundEngine.prototype.meltdown = function () {
     this._tone(160, 0.7, 0.3, "sawtooth", 880);
     this._noise(0.5, 0.2, 3000);
@@ -106,7 +106,7 @@
     setTimeout(function () { self._tone(990, 0.14, 0.22, "triangle", 1320); }, 90);
   };
 
-  /** Round over — descending "aww". */
+  /** Round over: descending "aww". */
   SoundEngine.prototype.gameover = function () {
     this._tone(440, 0.6, 0.25, "sine", 110);
   };
