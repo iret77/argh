@@ -9,7 +9,7 @@ description: >-
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 metadata:
-  version: "2026-08-14e"
+  version: "2026-08-14f"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -122,6 +122,12 @@ Choosing them:
 - **Strip anything private**: file paths, repo or project names, people, URLs,
   ticket numbers, credentials, stack traces. If a line will not clean up, drop
   it and pass fewer, or none.
+- **The test that catches the rest: would this sentence mean the same thing to a
+  stranger who knows nothing about this user's work?** "Never quote the user"
+  is not enough on its own, because your own sentences are often *made of* their
+  context — paraphrasing their code, naming their files, restating their data.
+  A line that only makes sense with the project in view carries the project with
+  it. Generic self-incrimination travels; specifics do not.
 - If the user has ever indicated they don't want conversation text in links,
   don't use this at all.
 
