@@ -4,12 +4,13 @@ Install a tiny skill once; after that, whenever you type `argh`, you get a
 one-click link to smash your frustration in the same session that just annoyed
 you.
 
-There are two ways in, and which one applies depends on a single question: can
-your agent write files? Note that this is about the *tab you are in*, not the
-app — ChatGPT and Claude both bundle a chat and a coding agent into one desktop
-app, and only one of the two can install a skill for you.
+Which way in applies depends on the *tab you are in*, not the app — ChatGPT and
+Claude both bundle a chat and a coding agent into one desktop app, and they do
+not all handle skills the same way. One exception worth knowing up front:
+**ChatGPT's personal chat cannot install skills at all**; use its Work or Codex
+tab instead.
 
-## Coding agents (Claude Code, the Codex tab in ChatGPT)
+## Claude Code, Codex, ChatGPT Work
 
 Paste this:
 
@@ -30,13 +31,17 @@ not to paper over a failure with an improvised substitute, such as quietly
 
 Your agent's own permission prompts still apply.
 
-## Chat windows (claude.ai, the chat tabs in ChatGPT)
+## claude.ai chat
 
 A chat can't install a skill on its own — it has no tool for it, and asking it
 to fetch one from a link gets you a refusal, correctly so. Add it yourself:
 
 1. Download [`argh.skill`](https://iret77.github.io/argh/argh.skill).
-2. Upload it in your app's own skill settings, wherever that app keeps them.
+2. Upload it under Settings → Capabilities → Skills, then toggle it on.
+
+ChatGPT no longer takes a skill file this way at all: attach one and it hands
+you back an install prompt of its own instead. Which makes the prompt above the
+canonical route there — in the Work or Codex tab, never the personal chat.
 
 `argh.skill` is an ordinary zip published under the `.skill` name skill
 publishers conventionally use — the skill folder is its root, which is the

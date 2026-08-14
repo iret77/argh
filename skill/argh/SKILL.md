@@ -9,7 +9,7 @@ description: >-
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 metadata:
-  version: "2026-08-14"
+  version: "2026-08-14b"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -38,7 +38,13 @@ actually solved, help them normally instead.
 Reply with **one short, light, empathetic line** and then the game link. Keep
 it playful; a little self-deprecation is good. Example shape:
 
-> Oof, that one's on me. Go take it out on some chat bubbles: <link>
+> Oof, that one's on me. [Go take it out on some chat bubbles](<link>).
+
+**Put the link behind short markdown link text, as above — never paste the bare
+URL.** The parameters below carry quoted sentences, so the raw URL is a wall of
+`%20` and `%C3%BC`; that is unpleasant to look at and undercuts the one-line
+reply the whole skill is built around. Write the reply in the language the user
+is speaking.
 
 ## Building the link
 
