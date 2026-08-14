@@ -109,11 +109,20 @@
     <p>Zusätzlich kann der Link bis zu drei kurze Zitate enthalten — Sätze, die der
       Assistent unmittelbar vor deinem Wutausbruch selbst geschrieben hat und die dann
       als Sprechblasen erscheinen. Diese stehen hinter dem Rautezeichen
-      (<code>#q=…</code>), und das ist Absicht: <b>Browser senden alles hinter dem
-      <code>#</code> grundsätzlich nicht an den Server.</b> Die Zitate erreichen den
-      Hoster also nicht und tauchen in keinem Server-Log auf. Sie bleiben auf deinem
-      Gerät — sichtbar im Chat, aus dem der Link stammt, und im Verlauf deines
-      Browsers.</p>
+      (<code>#q=…</code>), und das ist Absicht: <b>Der Teil einer Adresse hinter dem
+      <code>#</code> ist nicht Bestandteil der HTTP-Anfrage</b> (so festgelegt in
+      <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.5" target="_blank" rel="noopener">RFC&nbsp;3986</a>);
+      er wird erst im Browser ausgewertet und gehört auch nicht in den
+      <code>Referer</code>-Header. Die Zitate erreichen den Hoster dieser Seite
+      deshalb nicht und stehen in keinem seiner Server-Logs.</p>
+    <p>Vollständig ist das Bild damit aber erst mit zwei Einschränkungen. Erstens
+      <i>könnte</i> Javascript auf einer Seite das Fragment auslesen und weiterschicken
+      — diese Seite tut das nicht, sie sendet überhaupt nichts, wie oben beschrieben.
+      Zweitens bleiben die Zitate auf deinem Gerät sichtbar: im Chat, aus dem der Link
+      stammt, und im Verlauf deines Browsers. Wenn du die Browser-Synchronisation
+      nutzt (etwa Chrome-Sync oder iCloud), überträgt dein Browser den Verlauf
+      einschließlich solcher Adressen an seinen Hersteller — darauf habe ich keinen
+      Einfluss.</p>
     <p>Der Skill ist zusätzlich angewiesen, nichts Vertrauliches zu übernehmen — keine
       Dateipfade, Projekt- oder Personennamen, Zugangsdaten oder Ticketnummern. Verlass
       dich nicht blind darauf: <b>Was im Link steht, kannst du vor dem Öffnen selbst
