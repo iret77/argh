@@ -29,7 +29,7 @@
     comboWindow: 1.6,       // seconds to keep a combo alive
     goldenChance: 0.06,
     toughChance: 0.16,      // "wall of text" bubbles (multiple hits)
-    quoteChance: 0.4,       // share of spawns using an agent-supplied ?q= quote
+    quoteChance: 0.65,      // share of later spawns reusing an agent-supplied quote
   };
 
   var RANKS = [
@@ -72,18 +72,30 @@
       .slice(0, MAX_QUOTE_LEN);
   }
 
-  // Repeated ?q= parameters carry what the agent actually said before the user
+  // Repeated q= entries carry what the agent actually said before the user
   // snapped. Repeated rather than comma-separated on purpose: real sentences
   // are full of commas. Types are handed out in slot order so a custom quote
   // still inherits a colour and a model tag like any other bubble.
-  function parseQuotes(p) {
-    var raw = p.getAll ? p.getAll("q") : [];
-    var out = [];
-    for (var i = 0; i < raw.length && out.length < MAX_QUOTES; i++) {
-      var text = sanitizeQuote(raw[i]);
-      if (text) out.push({ text: text, type: TYPE_ORDER[out.length % TYPE_ORDER.length] });
+  //
+  // These live in the URL *fragment*, not the query string, and that is the
+  // whole point: browsers never send anything after the "#" to the server, so
+  // a quote lifted out of a private conversation cannot end up in the host's
+  // access logs. Read the fragment yourself rather than reusing the query
+  // parser -- putting these two back together would quietly undo that.
+  function readQuotes() {
+    try {
+      var hash = String(window.location.hash || "").replace(/^#/, "");
+      if (!hash) return [];
+      var raw = new URLSearchParams(hash).getAll("q");
+      var out = [];
+      for (var i = 0; i < raw.length && out.length < MAX_QUOTES; i++) {
+        var text = sanitizeQuote(raw[i]);
+        if (text) out.push({ text: text, type: TYPE_ORDER[out.length % TYPE_ORDER.length] });
+      }
+      return out;
+    } catch (e) {
+      return [];
     }
-    return out;
   }
 
   // Parse a comma-separated model list into up to MAX_MODELS clean names.
@@ -118,11 +130,11 @@
       return {
         ai: sanitizeName(p.get("ai")),
         models: parseModels(p.get("models") || p.get("model")),
-        quotes: parseQuotes(p),
+        quotes: readQuotes(),
         help: readHelpPref(p),
       };
     } catch (e) {
-      return { ai: "", models: [], quotes: [], help: null };
+      return { ai: "", models: [], quotes: readQuotes(), help: null };
     }
   }
 
@@ -210,6 +222,8 @@
     this.floaters.length = 0;
     this.shockwaves.length = 0;
     this.spawnTimer = 0.5;
+    // Replayed each round, so "SMASH AGAIN" opens on the same lines.
+    this.quoteQueue = this.quotes ? this.quotes.slice() : [];
   };
 
   // -------------------------------------------------------------- DOM wiring
@@ -424,12 +438,22 @@
 
   Game.prototype._spawn = function () {
     var d = this._difficulty();
-    var golden = Math.random() < CONFIG.goldenChance;
-    var tough = !golden && Math.random() < CONFIG.toughChance;
+    var golden = false;
+    var phrase;
 
-    var phrase = golden
-      ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
-      : pickPhrase(this.quotes);
+    // The lines the agent handed over open the round, in the order it sent
+    // them, before any stock phrase gets a turn. Never as a golden bonus --
+    // that bubble is the joke about a *helpful* answer.
+    if (this.quoteQueue.length) {
+      phrase = this.quoteQueue.shift();
+    } else {
+      golden = Math.random() < CONFIG.goldenChance;
+      phrase = golden
+        ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
+        : pickPhrase(this.quotes);
+    }
+
+    var tough = !golden && Math.random() < CONFIG.toughChance;
 
     var rise = lerp(CONFIG.baseRise, CONFIG.maxRise, d) * (this.inMeltdown ? 0.7 : 1);
     if (golden) rise *= 1.7;

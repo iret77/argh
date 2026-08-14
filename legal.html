@@ -101,19 +101,23 @@
 
     <h3>Angaben in der Adresszeile</h3>
     <p>Das Spiel kann über Adress-Parameter aufgerufen werden, die einen KI- und
-      Modellnamen enthalten (etwa <code>?ai=…&amp;models=…</code>) und zusätzlich bis
-      zu drei kurze Zitate (<code>?q=…</code>) — also Sätze, die der Assistent
-      unmittelbar vor deinem Wutausbruch selbst geschrieben hat und die dann als
-      Sprechblasen im Spiel erscheinen. Diese Angaben stammen von dir beziehungsweise
-      von dem Assistenten, der dir den Link gegeben hat. Sie werden ausschließlich im
-      Browser angezeigt und nirgendwohin gesendet — sie sind allerdings, wie jede
-      aufgerufene Adresse, Bestandteil der oben beschriebenen Server-Logs des Hosters
-      und stehen im Verlauf deines Browsers.</p>
-    <p>Der Skill ist angewiesen, dabei nichts Vertrauliches zu übernehmen — keine
-      Dateipfade, Projekt- oder Personennamen, Zugangsdaten oder Ticketnummern.
-      Verlass dich nicht blind darauf: <b>Was in der Adresszeile steht, kannst du vor
-      dem Öffnen des Links selbst lesen</b> und den Link notfalls kürzen oder gar nicht
-      erst aufrufen.</p>
+      Modellnamen enthalten (etwa <code>?ai=…&amp;models=…</code>). Diese Angaben
+      stammen von dir beziehungsweise von dem Assistenten, der dir den Link gegeben
+      hat. Sie werden ausschließlich im Browser angezeigt und nirgendwohin gesendet —
+      sie sind allerdings, wie jede aufgerufene Adresse, Bestandteil der oben
+      beschriebenen Server-Logs des Hosters.</p>
+    <p>Zusätzlich kann der Link bis zu drei kurze Zitate enthalten — Sätze, die der
+      Assistent unmittelbar vor deinem Wutausbruch selbst geschrieben hat und die dann
+      als Sprechblasen erscheinen. Diese stehen hinter dem Rautezeichen
+      (<code>#q=…</code>), und das ist Absicht: <b>Browser senden alles hinter dem
+      <code>#</code> grundsätzlich nicht an den Server.</b> Die Zitate erreichen den
+      Hoster also nicht und tauchen in keinem Server-Log auf. Sie bleiben auf deinem
+      Gerät — sichtbar im Chat, aus dem der Link stammt, und im Verlauf deines
+      Browsers.</p>
+    <p>Der Skill ist zusätzlich angewiesen, nichts Vertrauliches zu übernehmen — keine
+      Dateipfade, Projekt- oder Personennamen, Zugangsdaten oder Ticketnummern. Verlass
+      dich nicht blind darauf: <b>Was im Link steht, kannst du vor dem Öffnen selbst
+      lesen</b> und ihn notfalls kürzen oder gar nicht erst aufrufen.</p>
 
     <h3>Deine Rechte</h3>
     <p>Dir stehen gegenüber dem Verantwortlichen die Rechte aus Art. 15 bis 21 DSGVO

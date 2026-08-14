@@ -54,10 +54,18 @@ Append these query parameters, all URL-encoded (encode spaces as `%20`):
   sure which model you are, **omit the parameter entirely** rather than
   guessing. Fewer than three still works.
 - `q` (optional, **repeatable**, up to three): the lines *you* just said that set
-  this off. Repeat the parameter once per quote — `&q=…&q=…` — and never
-  comma-separate them; real sentences are full of commas. These bubbles get a
-  guaranteed share of the spawns, so the player smashes the thing that actually
-  annoyed them instead of a stock phrase. How to pick them:
+  this off. These open the round, in the order you send them, and keep coming
+  back after — so the player smashes the thing that actually annoyed them
+  instead of a stock phrase.
+
+  **`q` goes after the `#`, not in the query string.** Put `ai` and `models`
+  before it as usual, then append `#q=…&q=…` — repeated, never
+  comma-separated, because real sentences are full of commas. The `#` matters:
+  browsers never send a fragment to the server, so a quote lifted out of the
+  conversation stays on the player's machine instead of landing in the host's
+  access logs. Do not move `q` into the query string.
+
+  How to pick them:
 
   - **Take them from your own output in the turn or two immediately before the
     outburst.** That is what the user is angry at. Do not invent a line that
@@ -69,9 +77,10 @@ Append these query parameters, all URL-encoded (encode spaces as `%20`):
     it.
   - **Strip anything private.** No file paths, repo or project names, customer
     or colleague names, URLs, ticket numbers, credentials, tokens, stack traces,
-    or identifiers specific to their work. This ends up in a URL, so it also
-    ends up in the host's server logs and the player's browser history. If a
-    line cannot be cleaned without losing the joke, drop it and pass fewer.
+    or identifiers specific to their work. The fragment keeps this off the
+    server, but it is still visible in the chat and in the player's browser
+    history. If a line cannot be cleaned without losing the joke, drop it and
+    pass fewer.
   - URL-encode each one, and omit `q` entirely if nothing recent fits. The game
     has plenty of stock material.
 
@@ -89,7 +98,7 @@ Examples (fill in your own name and model; URL-encode spaces as %20):
 - One model: `https://iret77.github.io/argh/?ai=<your-ai>&models=<your-model>`
 - Model unknown: `https://iret77.github.io/argh/?ai=<your-ai>`
 - Been here before: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>&help=0`
-- Quoting yourself: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>&q=I've%20fixed%20the%20issue.&q=That%20should%20work%20now.`
+- Quoting yourself: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>#q=I've%20fixed%20the%20issue.&q=That%20should%20work%20now.`
 
 The game hard-codes no names; it simply displays whatever you pass here. That
 keeps the brand reference tied to the live session rather than baked into the
