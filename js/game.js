@@ -38,7 +38,6 @@
     { min: 4000, name: "INCANDESCENT" },
   ];
 
-  var BEST_KEY = "argh_best_score_v1";
 
   // --------------------------------------------------------------- utilities
   function rand(a, b) { return a + Math.random() * (b - a); }
@@ -68,6 +67,19 @@
       .slice(0, MAX_MODELS);
   }
 
+  // Optional ?help=0 / ?help=1. The referring agent knows whether it has sent
+  // this player here before; the game deliberately remembers nothing, so it
+  // takes that hint from the URL instead of storing anything on the device.
+  // Returns true (force open), false (start collapsed) or null (not specified).
+  function readHelpPref(p) {
+    var v = p.get("help");
+    if (v === null) return null;
+    v = String(v).trim().toLowerCase();
+    if (v === "0" || v === "false" || v === "no" || v === "off") return false;
+    if (v === "1" || v === "true" || v === "yes" || v === "on") return true;
+    return null;
+  }
+
   // Read ?ai= and ?models= (or legacy ?model=) from the URL. The game
   // hard-codes no brand names; they arrive here (e.g. from the "argh"
   // skill) or via the setup form.
@@ -77,9 +89,10 @@
       return {
         ai: sanitizeName(p.get("ai")),
         models: parseModels(p.get("models") || p.get("model")),
+        help: readHelpPref(p),
       };
     } catch (e) {
-      return { ai: "", models: [] };
+      return { ai: "", models: [], help: null };
     }
   }
 
@@ -93,6 +106,7 @@
     var params = readParams();
     this.ai = params.ai;          // the AI the player named (never hard-coded)
     this.models = params.models;  // up to 3 model names, optional
+    this.helpPref = params.help;  // true | false | null (see readHelpPref)
     this.configured = !!this.ai;
 
     this.dpr = 1;
@@ -110,8 +124,13 @@
     this.shake = 0;
     this.spawnTimer = 0;
 
+    // Best score lives for this page load only -- the site stores nothing on
+    // your device, so it is deliberately not carried across visits.
+    this.best = 0;
+
     this.reset();
     this._bindUI();
+    this._initHowTo();
     this._resize();
     window.addEventListener("resize", this._resize.bind(this));
 
@@ -137,7 +156,6 @@
     this.floaters.length = 0;
     this.shockwaves.length = 0;
     this.spawnTimer = 0.5;
-    this.best = parseInt(localStorage.getItem(BEST_KEY) || "0", 10) || 0;
   };
 
   // -------------------------------------------------------------- DOM wiring
@@ -162,6 +180,7 @@
       statCombo: document.getElementById("statCombo"),
       statMeltdowns: document.getElementById("statMeltdowns"),
       tagline: document.getElementById("tagline"),
+      howTo: document.getElementById("howTo"),
       setup: document.getElementById("setup"),
       aiInput: document.getElementById("aiInput"),
       modelInput: document.getElementById("modelInput"),
@@ -211,17 +230,9 @@
       self.sound.setMuted(m);
       self.el.muteBtn.setAttribute("aria-pressed", String(m));
       self.el.muteBtnMenu.setAttribute("aria-pressed", String(m));
-      try { localStorage.setItem("argh_muted", m ? "1" : "0"); } catch (e) {}
     };
     this.el.muteBtn.addEventListener("click", toggleMute);
     this.el.muteBtnMenu.addEventListener("click", toggleMute);
-
-    // Restore mute preference.
-    if (localStorage.getItem("argh_muted") === "1") {
-      this.sound.setMuted(true);
-      this.el.muteBtn.setAttribute("aria-pressed", "true");
-      this.el.muteBtnMenu.setAttribute("aria-pressed", "true");
-    }
 
     // Pointer input on the canvas.
     var onDown = function (e) {
@@ -280,8 +291,22 @@
       : "Blow off some steam.";
   };
 
+  // The how-to is only news the first time. Open by default; the referring
+  // agent can collapse it with ?help=0 for a player it has sent here before,
+  // which keeps that memory with the agent instead of on the device.
+  Game.prototype._initHowTo = function () {
+    if (!this.el || !this.el.howTo || this.helpPref === null) return;
+    this.el.howTo.open = this.helpPref;
+  };
+
+  // Once you've played a round, it has served its purpose for this visit.
+  Game.prototype._collapseHowTo = function () {
+    if (this.el && this.el.howTo) this.el.howTo.open = false;
+  };
+
   // -------------------------------------------------------------- state flow
   Game.prototype.start = function () {
+    this._collapseHowTo();
     this.reset();
     this.state = "playing";
     this.paused = false;
@@ -299,10 +324,7 @@
     this.el.muteBtn.hidden = true;
 
     var isNewBest = this.score > this.best;
-    if (isNewBest) {
-      this.best = this.score;
-      try { localStorage.setItem(BEST_KEY, String(this.best)); } catch (e) {}
-    }
+    if (isNewBest) this.best = this.score;
 
     var rank = RANKS[0].name;
     for (var i = 0; i < RANKS.length; i++) {

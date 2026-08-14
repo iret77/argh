@@ -40,7 +40,9 @@ supplied at runtime, in one of two ways:
 1. **URL parameters:** `?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>`
    (up to three models, comma-separated). The names you pass show on the
    bubbles; the tagline greets you personally. (`?model=<name>` is still
-   accepted as a single-model alias.)
+   accepted as a single-model alias.) An optional `&help=0` starts the how-to
+   collapsed — the referring agent adds it for a player it has sent here
+   before, which keeps that memory with the agent instead of on the device.
 2. **Setup prompt:** open the game with no parameters and it asks *"Which AI
    drove you up the wall?"* (plus optional model(s)) before the round starts.
    Nothing is played until you answer.
@@ -93,8 +95,9 @@ install skills say so plainly instead of substituting an improvised workaround.
   hits), rare golden bonuses, and three colour-coded personality types.
 - 🔊 **Synthesized audio:** every sound effect is generated at runtime with the
   Web Audio API, so there are **no audio assets** and it works fully offline.
-- 🏆 **Persistent high score**, rage ranks, end-of-round stats and a copy-result
-  button.
+- 🏆 **Rage ranks**, end-of-round stats and a copy-result button. The best score
+  lives for the current page load only — the site writes **nothing** to your
+  device: no cookies, no local storage, no analytics, no third-party requests.
 - 📱 Responsive, touch-friendly, respects `prefers-reduced-motion`.
 
 ## Project structure

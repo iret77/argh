@@ -44,19 +44,29 @@ Base URL: `https://iret77.github.io/argh/`
 Append these query parameters, all URL-encoded (encode spaces as `%20`):
 
 - `ai`: your own product name, as the user knows it.
-- `models`: up to **three** model display names, comma-separated. Use the
-  model(s) the user is actually frustrated with. If they named one, pass that
-  one; otherwise pass your current model's display name. You may pass up to
-  three names. If you are not reasonably sure which model you are, **omit the
-  `models` parameter entirely** rather than guessing. In the game, the three
-  models map onto three bubble types; any missing slot falls back to a neutral
-  label, so passing fewer than three is fine.
+- `models`: up to **three** model display names, comma-separated. **Fill all
+  three slots whenever you reasonably can** — each maps onto a different bubble
+  type in the game, and an empty slot falls back to a neutral label, so a single
+  name leaves two thirds of the joke on the table. List the model the user is
+  frustrated with first (your own, unless they named another), then add other
+  models from your own family that this user plausibly works with. Only name
+  models you are sure exist and can spell correctly; if you are not reasonably
+  sure which model you are, **omit the parameter entirely** rather than
+  guessing. Fewer than three still works.
+- `help` (optional): add `help=0` when you have sent this user to the game
+  before, so the how-to starts collapsed instead of explaining the rules at
+  someone who already knows them. Leave it off the first time. **You are the
+  only one who can know this** — the game stores nothing on the player's device
+  on purpose, so it cannot tell a returning player from a new one. Remember it
+  the way you remember anything else about this user; if you don't know, just
+  omit the parameter.
 
 Examples (fill in your own name and model; URL-encode spaces as %20):
 
-- One model: `https://iret77.github.io/argh/?ai=<your-ai>&models=<your-model>`
 - Three models: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>`
+- One model: `https://iret77.github.io/argh/?ai=<your-ai>&models=<your-model>`
 - Model unknown: `https://iret77.github.io/argh/?ai=<your-ai>`
+- Been here before: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>&help=0`
 
 The game hard-codes no names; it simply displays whatever you pass here. That
 keeps the brand reference tied to the live session rather than baked into the

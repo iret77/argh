@@ -213,6 +213,21 @@ html, body {
   margin: 0 auto 24px;
   max-width: 320px;
 }
+.how-to-summary {
+  list-style: none;
+  cursor: pointer;
+  align-self: center;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 4px 2px;
+}
+.how-to-summary::-webkit-details-marker { display: none; }
+.how-to-summary::after { content: " ▾"; opacity: 0.7; }
+.how-to[open] .how-to-summary::after { content: " ▴"; }
+.how-to-summary:hover { color: var(--ink); }
 .how-to-item {
   display: flex;
   align-items: center;
@@ -408,6 +423,8 @@ html, body {
   line-height: 1.4;
 }
 .footer strong { color: rgba(244, 241, 255, 0.85); font-weight: 700; }
+.footer a { color: inherit; }
+.footer a:hover { color: rgba(244, 241, 255, 0.95); }
 
 @media (max-width: 380px) {
   .how-to-item { font-size: 13px; padding: 9px 12px; }

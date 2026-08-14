@@ -73,11 +73,13 @@
                  autocomplete="off" spellcheck="false" placeholder="e.g. the model that annoyed you" />
         </form>
 
-        <div class="how-to">
+        <!-- Open on a first visit, collapsed once you've played (see game.js). -->
+        <details id="howTo" class="how-to" open>
+          <summary class="how-to-summary">How it works</summary>
           <div class="how-to-item"><span class="how-to-emoji">👆</span> Tap the chat bubbles to smash them</div>
           <div class="how-to-item"><span class="how-to-emoji">🔥</span> Chain hits to build a RAGE combo</div>
           <div class="how-to-item"><span class="how-to-emoji">💥</span> Fill the meter to trigger a MELTDOWN</div>
-        </div>
+        </details>
 
         <button id="startBtn" class="btn btn--primary" type="button" disabled>START SMASHING</button>
 
@@ -130,6 +132,7 @@
 
     <footer class="footer">
       Built with <strong>Claude Opus&nbsp;4.8</strong> · an unofficial, fan-made stress-relief game
+      · <a href="legal.html">Impressum &amp; Datenschutz</a>
     </footer>
   </div>
 
