@@ -96,6 +96,24 @@
     }
   }
 
+  // The phrase list is unevenly split across the three types -- there is simply
+  // more sourced sycophancy out there than sourced fabrication. Picking a phrase
+  // uniformly would hand the first supplied model name about twice the airtime of
+  // the third, so pick the type first and then a phrase within it.
+  var PHRASES_BY_TYPE = (function () {
+    var m = {};
+    for (var i = 0; i < PHRASES.length; i++) {
+      var t = PHRASES[i].type || DEFAULT_TYPE;
+      (m[t] || (m[t] = [])).push(PHRASES[i]);
+    }
+    return m;
+  })();
+
+  function pickPhrase() {
+    var pool = PHRASES_BY_TYPE[pick(TYPE_ORDER)];
+    return pool && pool.length ? pick(pool) : pick(PHRASES);
+  }
+
   // ------------------------------------------------------------------ engine
   function Game() {
     this.canvas = document.getElementById("game");
@@ -375,7 +393,7 @@
 
     var phrase = golden
       ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
-      : pick(PHRASES);
+      : pickPhrase();
 
     var rise = lerp(CONFIG.baseRise, CONFIG.maxRise, d) * (this.inMeltdown ? 0.7 : 1);
     if (golden) rise *= 1.7;
