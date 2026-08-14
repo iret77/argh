@@ -8,6 +8,9 @@ description: >-
   pre-filled as URL parameters. Do NOT trigger for normal questions, for
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
+metadata:
+  version: "2026-08-14"
+  source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
 # argh: the vent-link responder
