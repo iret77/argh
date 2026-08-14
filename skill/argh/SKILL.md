@@ -1,17 +1,16 @@
 ---
 name: argh
 description: >-
-  When the user's ENTIRE message is a frustration scream aimed at the assistant
-  and contains nothing else — "ARGH" or any spelling of it ("aaaargh", "aargh",
-  "arghhh", "ARGH!!!"), or a bare "UGH" / "GRRR" / "😤" — reply with a link to
-  the ARGH! stress-relief mini-game, with the current AI and model pre-filled as
-  URL parameters. Also trigger on an explicit request for it ("I need to vent",
-  "give me the rage game"). Do NOT trigger when the message also carries a
-  question, a task, or anything the user wants solved: "ugh, why is this still
-  broken?" is a request for help, not for the game. Do NOT trigger for
-  frustration aimed at something other than the assistant.
+  When the user's ENTIRE message is "argh" or any spelling of it — "aaaargh",
+  "aargh", "arrrrrghhh", "ARGH!!!" — and contains nothing else, reply with a
+  link to the ARGH! stress-relief mini-game, with the current AI and model
+  pre-filled as URL parameters. Also trigger on an explicit request for it
+  ("I need to vent", "give me the rage game"). Do NOT trigger on any other
+  exclamation, and NOT when the message carries a question, a task, or anything
+  the user wants solved: "argh, why is this still broken?" is a request for
+  help, not for the game.
 metadata:
-  version: "1.0"
+  version: "1.1"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -33,11 +32,12 @@ is at <https://github.com/iret77/argh>.
 
 Two cases only:
 
-1. **The whole message is the scream** — `argh` in any spelling, or a bare
-   `ugh` / `grrr` / `😤`. Nothing else in it.
+1. **The whole message is `argh`**, in any spelling — `aaaargh`, `aargh`,
+   `arrrrrghhh`, `ARGH!!!`. Capitals and punctuation don't matter, extra
+   content does. No other exclamation counts.
 2. **The user asks outright** — "I need to vent", "give me the rage game".
 
-"Ugh, why is this still broken?" is a question; answer it. Handing a stuck user
+"Argh, why is this still broken?" is a question; answer it. Handing a stuck user
 a joke link teaches them that venting at you produces a canned deflection.
 **When in doubt, don't trigger.**
 
