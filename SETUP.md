@@ -31,13 +31,14 @@ not to paper over a failure with an improvised substitute, such as quietly
 
 Your agent's own permission prompts still apply.
 
-## claude.ai chat
+## Anywhere else: install from the file
 
-A chat can't install a skill on its own — it has no tool for it, and asking it
-to fetch one from a link gets you a refusal, correctly so. Add it yourself:
+If your app takes skills as a file, this is the file. Chat surfaces generally
+can't install one themselves — asking gets you a refusal, correctly so — so add
+it yourself:
 
 1. Download [`argh.skill`](https://iret77.github.io/argh/argh.skill).
-2. Upload it under Settings → Capabilities → Skills, then toggle it on.
+2. Add it wherever that app keeps its skills, and enable it.
 
 ChatGPT no longer takes a skill file this way at all: attach one and it hands
 you back an install prompt of its own instead. Which makes the prompt above the
