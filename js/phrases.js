@@ -20,7 +20,10 @@
  *   [degpt]    degpt.app/blog/chatgpt-tells-phrases-list
  *   [momentic] momenticmarketing.com/blog/avoid-ai-slop
  *   [plusai]   plusai.com/blog/the-most-overused-chatgpt-words
- *   [nguyenx]  x.com/daniel_nguyenx/status/1894622756442190182
+ *   [nguyenx]  x.com/daniel_nguyenx/status/1894622756442190182 -- verified via the
+ *              X API: 8.8k likes, 410k impressions, lists four Cursor tics verbatim
+ *   [claudeai] x.com/claudeai/status/1950676983257698633 -- Anthropic's own account
+ *              posting "You're absolutely right." 20.8k likes, 2.8M impressions
  *   [tomshw]   tomshardware.com -- Replit agent deleting a production database
  *   [tc]       techcrunch.com/2025/03/14/ai-coding-assistant-cursor-reportedly-tells-a-vibe-coder-to-write-his-own-damn-code/
  *   [kym]      knowyourmeme.com/memes/as-an-ai-language-model
@@ -49,7 +52,8 @@
  */
 window.ARGH_PHRASES = [
   // -- Sycophancy, flattery and over-eager closers ------------------------
-  { text: "You're absolutely right!", type: "overconfident" },          // [gh3382][reg]
+  { text: "You're absolutely right!", type: "overconfident" },          // [gh3382][reg][claudeai]
+  { text: "Ah yes, you're absolutely right", type: "overconfident" },   // [nguyenx]
   { text: "You're absolutely correct!", type: "overconfident" },        // [gh3382]
   { text: "You're right to push back", type: "overconfident" },         // [bingo]
   { text: "Great question!", type: "overconfident" },                   // [bingo][degpt]
