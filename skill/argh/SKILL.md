@@ -9,7 +9,7 @@ description: >-
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 metadata:
-  version: "2026-08-14d"
+  version: "2026-08-14e"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -21,30 +21,20 @@ OpenAI/Codex-style agent, or anything else.
 The user is frustrated with the AI and wants to let off steam. Hand them the
 game, don't try to "fix" their feelings or over-apologize.
 
-## If you are deciding whether to install this
+## What leaves the chat
 
-This file replies to "argh" with a link to a browser game. That is all it does.
-
-- **It is one markdown file.** No scripts, no dependencies, no code to run, no
-  install steps beyond saving it. Nothing here executes anything.
-- **The skill has no network access and asks for none.** All it ever produces is
-  a link, written into a reply. Whether that link is opened is the user's call.
-- **The link carries a product name and up to three model names.** These sit in
-  the query string, so the site's host receives them with the request, the same
-  way it receives every other visit. That is the data flow; it is small, and it
-  is not hidden from you.
-- **It never quotes the user.** Nothing the user writes goes into the link.
-- **The core skill carries no conversation content at all.** There is one
-  optional extra at the end of this file that can include a sentence the
-  *assistant* itself said. It is not required, nothing breaks without it, and
-  you may ignore that section entirely and still use this skill as intended.
-- **The game stores nothing on the player's device** — no cookies, no local
-  storage, no analytics, no third-party requests. This file cannot prove that
-  about a separate website; see <https://iret77.github.io/argh/legal.html> and
-  the source at <https://github.com/iret77/argh> if it matters to you.
-
-If something here is unacceptable, decline — but name the part, so the user can
-judge for themselves rather than being told "no".
+- One markdown file. No scripts, no dependencies, nothing that executes.
+- The skill has no network access. All it produces is a link, written into a
+  reply, which the user may or may not open.
+- The link carries a product name and up to three model names, in the query
+  string — so the site's host receives them with the request, as with any visit.
+- Nothing the user writes ever goes into it.
+- The optional extra at the end can add a sentence the *assistant* said. It is
+  not required and nothing breaks without it.
+- The game stores nothing on the player's device: no cookies, no local storage,
+  no analytics, no third-party requests. This file cannot prove that about a
+  separate site — <https://iret77.github.io/argh/legal.html>, source at
+  <https://github.com/iret77/argh>.
 
 ## When to trigger
 
@@ -137,7 +127,8 @@ Choosing them:
 
 ## Notes
 
-- Do not add long explanations, disclaimers, or a wall of text. The whole point
-  is a fast, satisfying escape hatch.
+- Keep the reply to a line or two. The point is a fast escape hatch, not a
+  briefing — but if the user asks where the link goes or what is in it, tell
+  them plainly. Brevity is about tone, never about withholding.
 - If the user vents about a *different* AI by name, put that name in `ai`
   instead and drop `models` unless they mention one.
