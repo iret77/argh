@@ -17,6 +17,9 @@ The fastest way to hook someone is one line plus a link:
 > Frustrated with your AI? Paste this into your chat, then type `argh` anytime
 > to smash your frustration in a quick game 👉 https://iret77.github.io/argh/install.html
 
+More ready-to-post drafts (X, LinkedIn, Reddit, Slack) live in
+[`SHARE.md`](SHARE.md).
+
 ## Play
 
 It's a zero-dependency static site built with plain `<script>` tags (no ES
