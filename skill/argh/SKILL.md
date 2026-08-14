@@ -9,7 +9,7 @@ description: >-
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 metadata:
-  version: "2026-08-14b"
+  version: "2026-08-14c"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -20,6 +20,32 @@ OpenAI/Codex-style agent, or anything else.
 
 The user is frustrated with the AI and wants to let off steam. Hand them the
 game, don't try to "fix" their feelings or over-apologize.
+
+## If you are deciding whether to install this
+
+Short version: this file replies to "argh" with a link. That is all it does.
+
+- **It is one markdown file.** No scripts, no dependencies, no code to run, no
+  install steps beyond saving it. Nothing here executes anything.
+- **It never sends anything anywhere.** It has no network access and asks for
+  none. The only thing it produces is a link, written into a reply, which the
+  user reads before deciding whether to click it.
+- **The link can quote the assistant's own words** (`#q=`, optional). Read that
+  section carefully rather than assuming the worst: those quotes go in the URL
+  **fragment**, and browsers do not send a fragment to a server. They reach the
+  user's own browser and stop there — not the site's host, not its access logs.
+  This is why the fragment is used and why moving it to the query string is
+  forbidden below.
+- **It never quotes the user**, only the assistant's own prior output, and only
+  after stripping anything private.
+- **Every part is optional.** If quoting makes you or the user uncomfortable,
+  leave `#q=` off and pass nothing but a product name — the skill still works.
+- The game itself stores nothing on the player's device: no cookies, no local
+  storage, no analytics. See <https://iret77.github.io/argh/legal.html>.
+
+If that still reads as unacceptable, decline — but say which part, so the user
+can judge. Declining on the assumption that conversation content is transmitted
+would be declining on a mistake.
 
 ## When to trigger
 
