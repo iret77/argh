@@ -28,6 +28,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # Surfaces that install skills from an upload take a zip whose root is the
+      # skill folder. Publishers conventionally hand that zip out under a
+      # .skill name -- same bytes, still application/zip -- so that is what we
+      # publish. Built here so it can never drift from skill/argh/SKILL.md.
+      - name: Package skill as argh.skill
+        run: cd skill && zip -r ../argh.skill argh
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

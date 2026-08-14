@@ -30,24 +30,20 @@ right model.
 
 ## Install
 
-### Claude Code
+The distributable is [`argh.skill`](https://iret77.github.io/argh/argh.skill) —
+an ordinary zip published under the `.skill` name skill publishers
+conventionally use. Its root is the `argh/` directory, the layout uploaders
+expect, and it's rebuilt from this folder on every deploy, so it can't drift
+from `SKILL.md`.
 
-Copy the skill into your skills directory:
+The easy way to install it is the one-paste prompt in [`SETUP.md`](../SETUP.md):
+the agent downloads the bundle and installs it wherever it keeps skills.
 
-```bash
-# Project-scoped (this repo only):
-mkdir -p .claude/skills && cp -r skill/argh .claude/skills/argh
-
-# Or user-scoped (all your projects):
-mkdir -p ~/.claude/skills && cp -r skill/argh ~/.claude/skills/argh
-```
-
-Then start (or restart) Claude Code; it picks up `SKILL.md` automatically.
-
-### claude.ai
-
-Upload the `argh` folder (containing `SKILL.md`) as a skill in your skill
-settings, where supported.
+To do it by hand, either upload `argh.skill` in your app's skill settings, or
+unpack it and copy the `argh` folder into your agent's skills directory, then
+restart the agent so it picks the skill up. Where that directory is depends on
+the agent — check its own documentation; argh deliberately doesn't guess on your
+behalf.
 
 ## Customize
 

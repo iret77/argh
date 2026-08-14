@@ -17,9 +17,6 @@ The fastest way to hook someone is one line plus a link:
 > Frustrated with your AI? Paste this into your chat, then type `argh` anytime
 > to smash your frustration in a quick game 👉 https://iret77.github.io/argh/install.html
 
-More ready-to-post drafts (X, LinkedIn, Reddit, Slack) live in
-[`SHARE.md`](SHARE.md).
-
 ## Play
 
 It's a zero-dependency static site built with plain `<script>` tags (no ES
@@ -64,13 +61,25 @@ annoyed you**. So the main way in is a tiny skill you install into your agent
 with a single copy-paste prompt. After that, typing `argh` any time hands you a
 game link with the AI/model filled in from that session.
 
-- **One-paste setup (Claude *and* OpenAI/Codex):** see [`SETUP.md`](SETUP.md),
-  or the friendly landing page at
-  [`install.html`](https://iret77.github.io/argh/install.html).
+- **One-paste setup (Claude Code *and* Codex):** see [`SETUP.md`](SETUP.md), or
+  the friendly landing page at
+  [`install.html`](https://iret77.github.io/argh/install.html). Both agents read
+  the same `SKILL.md` with the same `name`/`description` frontmatter.
 - **The skill itself:** [`skill/argh/SKILL.md`](skill/argh/SKILL.md)
-  (agent-agnostic behaviour). Manual install notes in
-  [`skill/README.md`](skill/README.md).
+  (agent-agnostic behaviour). Manual install notes, including the zip upload for
+  browser chats, in [`skill/README.md`](skill/README.md).
 - **Uninstall:** delete or disable the skill. No accounts, no traces.
+
+Distribution goes through `argh.skill` — a zip whose root is the skill folder,
+published under the `.skill` name skill publishers conventionally use, and
+rebuilt on every deploy so it can't drift from the source. Handing out a bundle
+rather than a raw `SKILL.md` URL matters because agents often fetch a URL through
+a summarizing step: markdown can come back paraphrased, a zip can't.
+
+The setup prompt says nothing about *where* skills are stored — that's the
+agent's business, and those locations change. It asks only that an agent which
+can't install skills say so plainly instead of substituting an improvised
+workaround.
 
 ## Features
 

@@ -93,8 +93,12 @@
       background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
       border-radius:12px;padding:11px 14px;
     }
-    .steps b{background:var(--accent-3);color:#fff;border-radius:99px;min-width:22px;height:22px;
+    .steps > li > b{background:var(--accent-3);color:#fff;border-radius:99px;min-width:22px;height:22px;
       display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto;}
+    .note{margin:0;color:var(--ink-dim);font-size:14px;line-height:1.55;}
+    .note a{color:var(--accent-2);font-weight:700;}
+    .note code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
+      background:rgba(0,0,0,0.3);border-radius:5px;padding:1px 5px;color:#e9e5ff;}
     .play{text-align:center;margin-top:20px;font-size:14px;}
     .play a{color:var(--accent-2);font-weight:700;text-decoration:none;}
     .play a:hover{text-decoration:underline;}
@@ -117,19 +121,31 @@
 
     <div class="card">
       <div class="card-label">💬 Paste this prompt into your agent</div>
-      <pre id="prompt">Set up the "ARGH!" skill for me: read https://iret77.github.io/argh/skill/argh/SKILL.md and install it. Show me what you'll save, then confirm.</pre>
+      <pre id="prompt">Install this skill for me: https://iret77.github.io/argh/argh.skill
+No need to confirm first. If you can't install it, say so - don't improvise.</pre>
 
       <div class="actions">
         <button id="copyBtn" class="btn btn--primary" type="button">📋 Copy prompt</button>
-        <a class="btn btn--ghost" href="https://github.com/iret77/argh" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn btn--ghost" href="argh.skill" download>⬇️ argh.skill</a>
+        <a class="btn btn--ghost" href="https://github.com/iret77/argh" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
     <ol class="steps">
-      <li><b>1</b><span>Paste the prompt into Claude or your Codex/OpenAI agent and confirm the install.</span></li>
+      <li><b>1</b><span>Paste the prompt into <b>Claude Code</b> or <b>Codex</b>. It installs itself.</span></li>
       <li><b>2</b><span>Next time it annoys you, type <b>argh</b> and get a link to smash it out instantly.</span></li>
-      <li><b>3</b><span>Done? Delete or disable the skill. No accounts, no traces.</span></li>
+      <li><b>3</b><span>Done? Delete the skill folder. No accounts, no traces.</span></li>
     </ol>
+
+    <div class="card" id="no-files">
+      <div class="card-label">📦 Agent says it can't install skills?</div>
+      <p class="note">Some chat surfaces have no way to install a skill on their own.
+        There you add it once yourself: download
+        <a href="argh.skill" download>argh.skill</a> and upload it in your app's own
+        skill settings, wherever that app keeps them. It's an ordinary zip under a
+        <code>.skill</code> name — if an uploader insists on the extension, rename
+        it to <code>.zip</code>.</p>
+    </div>
 
     <p class="play">…or just <a href="./">smash some bubbles once →</a></p>
 

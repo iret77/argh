@@ -8,5 +8,7 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Build output (none currently, kept for future)
+# Build output
 dist/
+# Generated at deploy time by .github/workflows/pages.yml
+argh.skill
