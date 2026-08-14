@@ -43,7 +43,10 @@ It's rebuilt on every deploy, so it can't drift from `SKILL.md`.
 
 ## Using it
 
-Type your frustration:
+Start a fresh session first — agents pick up a newly installed skill when they
+start, so it won't answer in the same session that installed it.
+
+Then type your frustration:
 
 ```
 aaaargh
