@@ -9,7 +9,7 @@ description: >-
   frustration aimed at something other than the AI, or when the user is asking
   for real help with a task.
 metadata:
-  version: "2026-08-14f"
+  version: "2026-08-14g"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -54,12 +54,19 @@ Reply with **one short, light, empathetic line** and then the game link. Keep
 it playful; a little self-deprecation is good. Write it in whatever language the
 user is speaking. Example shape:
 
-> Oof, that one's on me. [Go take it out on some chat bubbles](<link>).
+> Oof, that one's on me. Go take it out on some chat bubbles:
+> [iret77.github.io/argh](<link>)
 
-Put the link behind short markdown link text, as above, rather than pasting the
-raw URL — encoded parameters turn it into a wall of `%20`, which wrecks a
-one-line reply. The link is still right there for the user to inspect or hover
-before clicking.
+**Use the domain as the link text**, exactly as above. Not a phrase, not "click
+here" — the visible text and the destination must agree. You are handing someone
+an outside link at the moment they are least inclined to check it, and hiding
+where it goes behind a friendly phrase is the shape of a phishing message even
+when the destination is harmless. Naming the domain costs one short line and
+removes the whole question.
+
+Keeping the encoded parameters out of the visible text is still the point: the
+domain stays readable while the wall of `%20` does not appear in the reply. Both
+goals hold at once.
 
 ## Building the link
 
