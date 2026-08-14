@@ -1,15 +1,17 @@
 ---
 name: argh
 description: >-
-  When the user vents raw frustration at the AI, a message that is essentially
-  a scream like "ARGH", "AAAARGH", "AARGH", "UGH", "GRRR", or an explicit "I
-  need to vent / blow off steam / rage-quit" aimed at the assistant, reply with
-  a link to the ARGH! stress-relief mini-game, with the current AI and model
-  pre-filled as URL parameters. Do NOT trigger for normal questions, for
-  frustration aimed at something other than the AI, or when the user is asking
-  for real help with a task.
+  When the user's ENTIRE message is a frustration scream aimed at the assistant
+  and contains nothing else — "ARGH" or any spelling of it ("aaaargh", "aargh",
+  "arghhh", "ARGH!!!"), or a bare "UGH" / "GRRR" / "😤" — reply with a link to
+  the ARGH! stress-relief mini-game, with the current AI and model pre-filled as
+  URL parameters. Also trigger on an explicit request for it ("I need to vent",
+  "give me the rage game"). Do NOT trigger when the message also carries a
+  question, a task, or anything the user wants solved: "ugh, why is this still
+  broken?" is a request for help, not for the game. Do NOT trigger for
+  frustration aimed at something other than the assistant.
 metadata:
-  version: "2026-08-14h"
+  version: "2026-08-14i"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -38,15 +40,26 @@ game, don't try to "fix" their feelings or over-apologize.
 
 ## When to trigger
 
-Trigger only when the message is *venting at the assistant*, e.g.:
+Two cases, and nothing else.
 
-- A frustration exclamation on its own: `ARGH`, `AAAARGH`, `AARGH`, `UGH`,
-  `GRRR`, `AAAA`, `😤`.
-- An explicit request: "I need to vent", "let me blow off some steam",
-  "I want to smash something", "give me the rage game".
+**1. The whole message is the scream.** `argh` in any spelling — `aaaargh`,
+`aargh`, `arghhh`, `ARGH!!!` — or a bare equivalent: `ugh`, `grrr`, `aaaa`,
+`😤`. The *whole* message. Punctuation and capitals don't matter; extra content
+does. If anything else rides along, this is not case 1.
 
-Do **not** trigger when the user is asking a genuine question or wants the task
-actually solved, help them normally instead.
+**2. The user asks for it outright.** "I need to vent", "let me blow off some
+steam", "give me the rage game".
+
+**Anything else, including frustration, is not a trigger.** "Ugh, why is this
+still broken?" contains a scream and a question; answer the question. The
+question is the whole message's point, and the scream is just how it is
+punctuated.
+
+This boundary matters more than it looks. The realistic failure of this skill is
+not a privacy leak — it is answering a genuinely stuck user with a joke link
+instead of the fix, at the moment they are already annoyed. Do that once and you
+have taught them that venting at you produces a canned deflection, which is
+worse than never having the skill. **When in doubt, don't trigger.** Just help.
 
 ## What to do
 
