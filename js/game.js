@@ -29,7 +29,8 @@
     comboWindow: 1.6,       // seconds to keep a combo alive
     goldenChance: 0.06,
     toughChance: 0.16,      // "wall of text" bubbles (multiple hits)
-    quoteChance: 0.65,      // share of later spawns reusing an agent-supplied quote
+    quoteSharePer: 0.18,    // share of later spawns per agent-supplied quote...
+    quoteShareMax: 0.45,    // ...capped here, however many were supplied
   };
 
   var RANKS = [
@@ -151,10 +152,17 @@
     return m;
   })();
 
+  // How often a supplied quote comes back after the opening. Budgeted per quote
+  // rather than as one flat share: a single quote at a flat two thirds meant the
+  // same sentence in most of the bubbles, which stops being funny fast.
+  function quoteShare(n) {
+    return Math.min(CONFIG.quoteShareMax, CONFIG.quoteSharePer * n);
+  }
+
   function pickPhrase(quotes) {
     // A quote the agent supplied is the line that actually caused the rage, so
     // it gets a guaranteed share rather than competing with 70-odd stock ones.
-    if (quotes && quotes.length && Math.random() < CONFIG.quoteChance) {
+    if (quotes && quotes.length && Math.random() < quoteShare(quotes.length)) {
       return pick(quotes);
     }
     var pool = PHRASES_BY_TYPE[pick(TYPE_ORDER)];
@@ -451,7 +459,12 @@
       phrase = golden
         ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
         : pickPhrase(this.quotes);
+      // Several bubbles share the screen, so back-to-back duplicates read as a
+      // glitch. One re-roll is enough to break up the clumps without fighting
+      // the odds.
+      if (!golden && phrase.text === this._lastText) phrase = pickPhrase(this.quotes);
     }
+    this._lastText = phrase.text;
 
     var tough = !golden && Math.random() < CONFIG.toughChance;
 
