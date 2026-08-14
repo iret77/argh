@@ -70,16 +70,18 @@ game link with the AI/model filled in from that session.
   browser chats, in [`skill/README.md`](skill/README.md).
 - **Uninstall:** delete or disable the skill. No accounts, no traces.
 
-Distribution goes through `argh.skill` — a zip whose root is the skill folder,
-published under the `.skill` name skill publishers conventionally use, and
-rebuilt on every deploy so it can't drift from the source. Handing out a bundle
-rather than a raw `SKILL.md` URL matters because agents often fetch a URL through
-a summarizing step: markdown can come back paraphrased, a zip can't.
+There are two ways in, split by a single question: can the agent write files?
+Claude Code and Codex take the one-paste prompt, which points them at the
+readable `SKILL.md` — an agent about to add a persistent instruction to your
+setup should be able to inspect what it installs, and a careful one will refuse
+an opaque download from an unfamiliar link. Chat apps can't install a skill at
+all, so there you upload `argh.skill` yourself: a zip whose root is the skill
+folder, published under the `.skill` name skill publishers conventionally use and
+rebuilt on every deploy so it can't drift from the source.
 
-The setup prompt says nothing about *where* skills are stored — that's the
-agent's business, and those locations change. It asks only that an agent which
-can't install skills say so plainly instead of substituting an improvised
-workaround.
+The prompt says nothing about *where* skills are stored — that's the agent's
+business, and those locations change. It asks only that an agent which can't
+install skills say so plainly instead of substituting an improvised workaround.
 
 ## Features
 

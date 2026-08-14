@@ -30,20 +30,23 @@ right model.
 
 ## Install
 
-The distributable is [`argh.skill`](https://iret77.github.io/argh/argh.skill) —
-an ordinary zip published under the `.skill` name skill publishers
-conventionally use. Its root is the `argh/` directory, the layout uploaders
-expect, and it's rebuilt from this folder on every deploy, so it can't drift
-from `SKILL.md`.
+Two ways in, depending on whether your agent can write files. Both are spelled
+out in [`SETUP.md`](../SETUP.md).
 
-The easy way to install it is the one-paste prompt in [`SETUP.md`](../SETUP.md):
-the agent downloads the bundle and installs it wherever it keeps skills.
+**Agents with file access** (Claude Code, Codex) take the one-paste prompt,
+which points them at the readable `SKILL.md` — an agent about to add a
+persistent instruction should be able to inspect it first, and an opaque
+download from an unfamiliar link is something a careful agent will refuse.
 
-To do it by hand, either upload `argh.skill` in your app's skill settings, or
-unpack it and copy the `argh` folder into your agent's skills directory, then
-restart the agent so it picks the skill up. Where that directory is depends on
-the agent — check its own documentation; argh deliberately doesn't guess on your
-behalf.
+**Chat apps** can't install a skill at all; there you upload
+[`argh.skill`](https://iret77.github.io/argh/argh.skill) yourself — an ordinary
+zip published under the `.skill` name skill publishers conventionally use. Its
+root is the `argh/` directory, the layout uploaders expect, and it's rebuilt from
+this folder on every deploy, so it can't drift from `SKILL.md`.
+
+To install by hand, copy the `argh` folder into your agent's skills directory and
+restart the agent. Where that directory is depends on the agent — check its own
+documentation; argh deliberately doesn't guess on your behalf.
 
 ## Customize
 

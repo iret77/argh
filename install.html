@@ -111,41 +111,43 @@
   <div class="wrap">
     <h1 class="logo">ARGH<span>!</span></h1>
     <p class="lede"><b>Frustrated with your AI?</b><br />
-      Paste one prompt into your agent. Then just type <b>argh</b> any time to smash your frustration in a quick game.</p>
+      Install a tiny skill once. Then just type <b>argh</b> any time to smash your frustration in a quick game.</p>
 
     <div class="targets">
       <span class="chip">Claude Code</span>
-      <span class="chip">Claude Desktop</span>
-      <span class="chip">OpenAI / Codex</span>
+      <span class="chip">Codex</span>
+      <span class="chip">claude.ai</span>
     </div>
 
     <div class="card">
-      <div class="card-label">💬 Paste this prompt into your agent</div>
-      <pre id="prompt">Install this skill for me: https://iret77.github.io/argh/argh.skill
-No need to confirm first. If you can't install it, say so - don't improvise.</pre>
+      <div class="card-label">💬 Agents that can write files — Claude Code, Codex</div>
+      <pre id="prompt">Install this skill for me: https://iret77.github.io/argh/skill/argh/SKILL.md
+It's plain markdown - read it first. If you can't install skills, say so, don't improvise.</pre>
 
       <div class="actions">
         <button id="copyBtn" class="btn btn--primary" type="button">📋 Copy prompt</button>
-        <a class="btn btn--ghost" href="argh.skill" download>⬇️ argh.skill</a>
         <a class="btn btn--ghost" href="https://github.com/iret77/argh" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
-    <ol class="steps">
-      <li><b>1</b><span>Paste the prompt into <b>Claude Code</b> or <b>Codex</b>. It installs itself.</span></li>
-      <li><b>2</b><span>Next time it annoys you, type <b>argh</b> and get a link to smash it out instantly.</span></li>
-      <li><b>3</b><span>Done? Delete the skill folder. No accounts, no traces.</span></li>
-    </ol>
-
     <div class="card" id="no-files">
-      <div class="card-label">📦 Agent says it can't install skills?</div>
-      <p class="note">Some chat surfaces have no way to install a skill on their own.
-        There you add it once yourself: download
-        <a href="argh.skill" download>argh.skill</a> and upload it in your app's own
+      <div class="card-label">📦 Chat apps — claude.ai and the like</div>
+      <p class="note">A chat app can't install a skill on its own: it has no tool for
+        it, and asking it to fetch one from a link will just get you a polite refusal.
+        Add it yourself instead — download the file and upload it in your app's own
         skill settings, wherever that app keeps them. It's an ordinary zip under a
-        <code>.skill</code> name — if an uploader insists on the extension, rename
-        it to <code>.zip</code>.</p>
+        <code>.skill</code> name; if an uploader insists on the extension, rename it
+        to <code>.zip</code>.</p>
+      <div class="actions">
+        <a class="btn btn--primary" href="argh.skill" download>⬇️ Download argh.skill</a>
+      </div>
     </div>
+
+    <ol class="steps">
+      <li><b>1</b><span>Install it once, whichever way fits your agent.</span></li>
+      <li><b>2</b><span>Next time it annoys you, type <b>argh</b> and get a link to smash it out instantly.</span></li>
+      <li><b>3</b><span>Done? Delete the skill. No accounts, no traces.</span></li>
+    </ol>
 
     <p class="play">…or just <a href="./">smash some bubbles once →</a></p>
 
