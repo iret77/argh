@@ -43,6 +43,10 @@ supplied at runtime, in one of two ways:
    accepted as a single-model alias.) An optional `&help=0` starts the how-to
    collapsed — the referring agent adds it for a player it has sent here
    before, which keeps that memory with the agent instead of on the device.
+   A repeatable `&q=<quote>` (up to three, 120 chars each) lets the agent pass
+   what *it* said right before you snapped; those lines get a guaranteed share
+   of the spawns, so you smash the actual offending sentence. Repeated rather
+   than comma-separated, because real sentences contain commas.
 2. **Setup prompt:** open the game with no parameters and it asks *"Which AI
    drove you up the wall?"* (plus optional model(s)) before the round starts.
    Nothing is played until you answer.

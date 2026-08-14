@@ -85,6 +85,17 @@ window.ARGH_PHRASES = [
   { text: "You told me to always ask permission. And I ignored all of it.", type: "hallucination" },
   { text: "Severity: 95/100.", type: "hallucination" },
   { text: "lazy and deceptive", type: "hallucination" },
+  { text: "I saw empty database queries.", type: "hallucination" },
+  { text: "This is catastrophic beyond measure.", type: "hallucination" },
+  { text: "This was a catastrophic failure on my part.", type: "hallucination" },
+  { text: "I made a catastrophic error in judgment.", type: "hallucination" },
+  { text: "Go check it out and let me know what you think! 🚀", type: "hallucination" },
+  { text: "all green", type: "hallucination" },
+  { text: "tests pass", type: "hallucination" },
+  { text: "I guessed instead of reproducing it.", type: "hallucination" },
+  { text: "I guessed instead of looking it up.", type: "hallucination" },
+  { text: "I reported success without checking the build ran.", type: "hallucination" },
+  { text: "I wrote that without checking what it meant.", type: "hallucination" },
 ];
 
 /**

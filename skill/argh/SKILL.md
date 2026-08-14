@@ -53,6 +53,28 @@ Append these query parameters, all URL-encoded (encode spaces as `%20`):
   models you are sure exist and can spell correctly; if you are not reasonably
   sure which model you are, **omit the parameter entirely** rather than
   guessing. Fewer than three still works.
+- `q` (optional, **repeatable**, up to three): the lines *you* just said that set
+  this off. Repeat the parameter once per quote — `&q=…&q=…` — and never
+  comma-separate them; real sentences are full of commas. These bubbles get a
+  guaranteed share of the spawns, so the player smashes the thing that actually
+  annoyed them instead of a stock phrase. How to pick them:
+
+  - **Take them from your own output in the turn or two immediately before the
+    outburst.** That is what the user is angry at. Do not invent a line that
+    merely sounds like something you might have said, and never quote the user.
+  - **Quote verbatim, one clause or sentence.** Around **30–70 characters reads
+    best**; anything past 120 is cut off. Choose the smuggest, most
+    self-assured fragment — the false "done", the flattery opener, the
+    confident claim you then had to walk back — not the technical detail around
+    it.
+  - **Strip anything private.** No file paths, repo or project names, customer
+    or colleague names, URLs, ticket numbers, credentials, tokens, stack traces,
+    or identifiers specific to their work. This ends up in a URL, so it also
+    ends up in the host's server logs and the player's browser history. If a
+    line cannot be cleaned without losing the joke, drop it and pass fewer.
+  - URL-encode each one, and omit `q` entirely if nothing recent fits. The game
+    has plenty of stock material.
+
 - `help` (optional): add `help=0` when you have sent this user to the game
   before, so the how-to starts collapsed instead of explaining the rules at
   someone who already knows them. Leave it off the first time. **You are the
@@ -67,6 +89,7 @@ Examples (fill in your own name and model; URL-encode spaces as %20):
 - One model: `https://iret77.github.io/argh/?ai=<your-ai>&models=<your-model>`
 - Model unknown: `https://iret77.github.io/argh/?ai=<your-ai>`
 - Been here before: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>,<model-2>,<model-3>&help=0`
+- Quoting yourself: `https://iret77.github.io/argh/?ai=<your-ai>&models=<model-1>&q=I've%20fixed%20the%20issue.&q=That%20should%20work%20now.`
 
 The game hard-codes no names; it simply displays whatever you pass here. That
 keeps the brand reference tied to the live session rather than baked into the

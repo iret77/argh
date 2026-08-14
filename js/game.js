@@ -13,6 +13,8 @@
   var TYPE_ORDER = window.ARGH_TYPE_ORDER;
   var DEFAULT_TYPE = "overconfident";
   var MAX_MODELS = 3;
+  var MAX_QUOTES = 3;      // agent-supplied ?q= bubbles
+  var MAX_QUOTE_LEN = 120; // characters, after cleaning
 
   // ------------------------------------------------------------------ config
   var CONFIG = {
@@ -27,6 +29,7 @@
     comboWindow: 1.6,       // seconds to keep a combo alive
     goldenChance: 0.06,
     toughChance: 0.16,      // "wall of text" bubbles (multiple hits)
+    quoteChance: 0.4,       // share of spawns using an agent-supplied ?q= quote
   };
 
   var RANKS = [
@@ -55,6 +58,32 @@
       .replace(/\s+/g, " ")
       .trim()
       .slice(0, 24);
+  }
+
+  // Clean one agent-supplied quote. Longer budget than a name, same hygiene:
+  // control chars out, whitespace collapsed, hard length cap so one absurd
+  // parameter can't produce a bubble the size of the screen.
+  function sanitizeQuote(s) {
+    if (!s) return "";
+    return String(s)
+      .replace(/[\u0000-\u001f\u007f]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, MAX_QUOTE_LEN);
+  }
+
+  // Repeated ?q= parameters carry what the agent actually said before the user
+  // snapped. Repeated rather than comma-separated on purpose: real sentences
+  // are full of commas. Types are handed out in slot order so a custom quote
+  // still inherits a colour and a model tag like any other bubble.
+  function parseQuotes(p) {
+    var raw = p.getAll ? p.getAll("q") : [];
+    var out = [];
+    for (var i = 0; i < raw.length && out.length < MAX_QUOTES; i++) {
+      var text = sanitizeQuote(raw[i]);
+      if (text) out.push({ text: text, type: TYPE_ORDER[out.length % TYPE_ORDER.length] });
+    }
+    return out;
   }
 
   // Parse a comma-separated model list into up to MAX_MODELS clean names.
@@ -89,10 +118,11 @@
       return {
         ai: sanitizeName(p.get("ai")),
         models: parseModels(p.get("models") || p.get("model")),
+        quotes: parseQuotes(p),
         help: readHelpPref(p),
       };
     } catch (e) {
-      return { ai: "", models: [], help: null };
+      return { ai: "", models: [], quotes: [], help: null };
     }
   }
 
@@ -109,7 +139,12 @@
     return m;
   })();
 
-  function pickPhrase() {
+  function pickPhrase(quotes) {
+    // A quote the agent supplied is the line that actually caused the rage, so
+    // it gets a guaranteed share rather than competing with 70-odd stock ones.
+    if (quotes && quotes.length && Math.random() < CONFIG.quoteChance) {
+      return pick(quotes);
+    }
     var pool = PHRASES_BY_TYPE[pick(TYPE_ORDER)];
     return pool && pool.length ? pick(pool) : pick(PHRASES);
   }
@@ -124,6 +159,7 @@
     var params = readParams();
     this.ai = params.ai;          // the AI the player named (never hard-coded)
     this.models = params.models;  // up to 3 model names, optional
+    this.quotes = params.quotes;  // what the agent itself said, optional
     this.helpPref = params.help;  // true | false | null (see readHelpPref)
     this.configured = !!this.ai;
 
@@ -393,7 +429,7 @@
 
     var phrase = golden
       ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
-      : pickPhrase();
+      : pickPhrase(this.quotes);
 
     var rise = lerp(CONFIG.baseRise, CONFIG.maxRise, d) * (this.inMeltdown ? 0.7 : 1);
     if (golden) rise *= 1.7;
