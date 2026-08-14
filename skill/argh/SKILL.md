@@ -5,12 +5,12 @@ description: >-
   "aargh", "arrrrrghhh", "ARGH!!!" — and contains nothing else, reply with a
   link to the ARGH! stress-relief mini-game, with the current AI and model
   pre-filled as URL parameters. Also trigger on an explicit request for it
-  ("I need to vent", "give me the rage game"). Do NOT trigger on any other
+  ("I need to vent", "give me argh", "I want to smash some bubbles"). Do NOT trigger on any other
   exclamation, and NOT when the message carries a question, a task, or anything
   the user wants solved: "argh, why is this still broken?" is a request for
   help, not for the game.
 metadata:
-  version: "1.1"
+  version: "1.2"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -35,7 +35,7 @@ Two cases only:
 1. **The whole message is `argh`**, in any spelling — `aaaargh`, `aargh`,
    `arrrrrghhh`, `ARGH!!!`. Capitals and punctuation don't matter, extra
    content does. No other exclamation counts.
-2. **The user asks outright** — "I need to vent", "give me the rage game".
+2. **The user asks outright** — "I need to vent", "give me argh", "I want to smash some bubbles".
 
 "Argh, why is this still broken?" is a question; answer it. Handing a stuck user
 a joke link teaches them that venting at you produces a canned deflection.
