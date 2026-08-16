@@ -183,6 +183,16 @@
     this.helpPref = params.help;  // true | false | null (see readHelpPref)
     this.configured = !!this.ai;
 
+    // A supplied quote is something the *first* model actually said, so label it
+    // with that model instead of spreading quotes across the three slots. Only
+    // when a model came along too — with none supplied, the round-robin keeps
+    // the neutral labels and colours varied.
+    if (this.models.length && this.quotes.length) {
+      for (var qi = 0; qi < this.quotes.length; qi++) {
+        this.quotes[qi].type = TYPE_ORDER[0];
+      }
+    }
+
     this.dpr = 1;
     this.w = 0;
     this.h = 0;

@@ -10,7 +10,7 @@ description: >-
   the user wants solved: "argh, why is this still broken?" is a request for
   help, not for the game.
 metadata:
-  version: "1.2"
+  version: "1.3"
   source: https://iret77.github.io/argh/skill/argh/SKILL.md
 ---
 
@@ -58,10 +58,15 @@ check it. If they ask where it leads or what is in it, say so plainly.
 
 - **`ai=`** — your product name, as the user knows it. If they are venting about
   a *different* AI by name, use that name and drop `models`.
-- **`models=`** — up to three, comma-separated. Each maps to a different bubble
-  type, so three names give three flavours and one leaves two thirds neutral.
-  Never invent or misspell one — but being unsure about a sibling means pass
-  two, not none.
+- **`models=`** — up to three, comma-separated. **This is what makes the game
+  about them rather than about AI in general.** Every bubble is labelled with
+  one of these names, and the three names map to three different bubble types.
+  Whatever slot you leave empty gets a generic placeholder instead — the bubbles
+  come up reading `THE HALLUCINATOR` or `THE APOLOGIZER`, which is nobody. Pass
+  one name and two thirds of the screen says nothing the user recognises. So:
+  lead with the model in play, then add its current siblings — the ones this
+  user plausibly works with. Never invent or misspell a name, but being unsure
+  about a sibling is a reason to pass two, not none.
 - **`help=0`** — only if you have sent this user here before; it starts the
   how-to collapsed. The game remembers nothing about players on purpose, so you
   are the only one who can know this. If you don't, omit it.
