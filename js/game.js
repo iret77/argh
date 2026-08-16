@@ -31,15 +31,22 @@
     toughChance: 0.16,      // "wall of text" bubbles (multiple hits)
     quoteSharePer: 0.18,    // share of later spawns per agent-supplied quote...
     quoteShareMax: 0.45,    // ...capped here, however many were supplied
+    missGrace: 20,          // px beyond a bubble's edge that still counts as a neutral no-op
+    chainSpawnBias: 0.35,   // chance a spawn matches the active chain type once chain >= 2
+    spiralMin: 18,          // seconds between SPIRAL events, earliest
+    spiralMax: 25,          // ...latest
+    spiralGap: 0.25,        // seconds between bubbles within a spiral
+    spiralCountMin: 6,      // bubbles per spiral, fewest
+    spiralCountMax: 8,      // ...most
   };
 
   var RANKS = [
     { min: 0,    name: "Mildly Annoyed" },
-    { min: 400,  name: "Frustrated" },
-    { min: 900,  name: "Fed Up" },
-    { min: 1600, name: "Seething" },
-    { min: 2600, name: "Furious" },
-    { min: 4000, name: "INCANDESCENT" },
+    { min: 500,  name: "Frustrated" },
+    { min: 1150, name: "Fed Up" },
+    { min: 2100, name: "Seething" },
+    { min: 3400, name: "Furious" },
+    { min: 5200, name: "INCANDESCENT" },
   ];
 
 
@@ -159,11 +166,18 @@
     return Math.min(CONFIG.quoteShareMax, CONFIG.quoteSharePer * n);
   }
 
-  function pickPhrase(quotes) {
+  function pickPhrase(quotes, chainType, chain) {
     // A quote the agent supplied is the line that actually caused the rage, so
     // it gets a guaranteed share rather than competing with 70-odd stock ones.
     if (quotes && quotes.length && Math.random() < quoteShare(quotes.length)) {
       return pick(quotes);
+    }
+    // Gentle spawn bias: once a chain is under way, favour its type so a good
+    // chain doesn't die to spawn luck. Never guaranteed, so wild tapping stays
+    // viable -- it just doesn't get the assist.
+    if (chain >= 2 && chainType && Math.random() < CONFIG.chainSpawnBias) {
+      var biasPool = PHRASES_BY_TYPE[chainType];
+      if (biasPool && biasPool.length) return pick(biasPool);
     }
     var pool = PHRASES_BY_TYPE[pick(TYPE_ORDER)];
     return pool && pool.length ? pick(pool) : pick(PHRASES);
@@ -231,6 +245,9 @@
     this.combo = 0;
     this.comboTimer = 0;
     this.bestCombo = 0;
+    this.chain = 0;
+    this.chainType = null;
+    this.bestChain = 0;
     this.smashed = 0;
     this.meltdowns = 0;
     this.meltdownTimer = 0;
@@ -240,6 +257,13 @@
     this.floaters.length = 0;
     this.shockwaves.length = 0;
     this.spawnTimer = 0.5;
+    this.escapeSoundCd = 0;
+    this.inSpiral = false;
+    this.spiralQueue = [];
+    this.spiralType = null;
+    this.spiralUsesQuotes = false;
+    this.spiralGapTimer = 0;
+    this.spiralTimer = rand(CONFIG.spiralMin, CONFIG.spiralMax);
     // Replayed each round, so "SMASH AGAIN" opens on the same lines.
     this.quoteQueue = this.quotes ? this.quotes.slice() : [];
   };
@@ -264,6 +288,7 @@
       newBest: document.getElementById("newBest"),
       statSmashed: document.getElementById("statSmashed"),
       statCombo: document.getElementById("statCombo"),
+      statChain: document.getElementById("statChain"),
       statMeltdowns: document.getElementById("statMeltdowns"),
       tagline: document.getElementById("tagline"),
       howTo: document.getElementById("howTo"),
@@ -423,6 +448,7 @@
     this.el.newBest.hidden = !isNewBest;
     this.el.statSmashed.textContent = this.smashed;
     this.el.statCombo.textContent = this.bestCombo + "×";
+    this.el.statChain.textContent = this.bestChain + "×";
     this.el.statMeltdowns.textContent = this.meltdowns;
     this.el.gameover.hidden = false;
     this._lastRank = rank;
@@ -455,36 +481,47 @@
   };
 
   Game.prototype._spawn = function () {
-    var d = this._difficulty();
     var golden = false;
     var phrase;
 
     // The lines the agent handed over open the round, in the order it sent
     // them, before any stock phrase gets a turn. Never as a golden bonus --
     // that bubble is the joke about a *helpful* answer.
+    var isQuote = false;
     if (this.quoteQueue.length) {
       phrase = this.quoteQueue.shift();
+      isQuote = true;
     } else {
       golden = Math.random() < CONFIG.goldenChance;
       phrase = golden
         ? { text: "★ RARE: a helpful answer!", type: DEFAULT_TYPE }
-        : pickPhrase(this.quotes);
+        : pickPhrase(this.quotes, this.chainType, this.chain);
       // Several bubbles share the screen, so back-to-back duplicates read as a
       // glitch. One re-roll is enough to break up the clumps without fighting
       // the odds.
-      if (!golden && phrase.text === this._lastText) phrase = pickPhrase(this.quotes);
+      if (!golden && phrase.text === this._lastText) {
+        phrase = pickPhrase(this.quotes, this.chainType, this.chain);
+      }
     }
     this._lastText = phrase.text;
 
     var tough = !golden && Math.random() < CONFIG.toughChance;
+    this._makeBubble(phrase.text, phrase.type || DEFAULT_TYPE, golden, tough, isQuote);
+  };
 
+  // Build, measure, position and enqueue one bubble. Shared by the regular
+  // spawn timer and the SPIRAL event, which fires bubbles outside that timer.
+  // isQuote marks a line the agent actually said (see _tagFor).
+  Game.prototype._makeBubble = function (text, type, golden, tough, isQuote) {
+    var d = this._difficulty();
     var rise = lerp(CONFIG.baseRise, CONFIG.maxRise, d) * (this.inMeltdown ? 0.7 : 1);
     if (golden) rise *= 1.7;
 
     var b = {
-      text: phrase.text,
-      type: phrase.type || DEFAULT_TYPE,
+      text: text,
+      type: type || DEFAULT_TYPE,
       golden: golden,
+      isQuote: !!isQuote,
       hp: tough ? 3 : 1,
       maxHp: tough ? 3 : 1,
       tough: tough,
@@ -500,16 +537,25 @@
     this._measure(b);
     b.x = rand(b.hw + 12, this.w - b.hw - 12);
     this.bubbles.push(b);
+    return b;
   };
 
   // The short label above a bubble's text. Each personality type maps to one
   // supplied model (by slot order); a slot without a model falls back to the
   // neutral personality label. Golden bonuses read "BONUS".
+  //
+  // Quotes are pinned to the first slot (see constructor) because they are
+  // words a model actually said. That model's name is reserved for its own
+  // quote line -- a generic stock phrase that merely shares its type falls
+  // back to the neutral label instead of putting words in that model's mouth
+  // it never said.
   Game.prototype._tagFor = function (b) {
     if (b.golden) return "BONUS";
     var type = TYPES[b.type] ? b.type : DEFAULT_TYPE;
     var slot = TYPE_ORDER.indexOf(type);
     var model = slot >= 0 ? this.models[slot] : "";
+    var quotedType = this.quotes.length ? TYPE_ORDER[0] : null;
+    if (model && type === quotedType && !b.isQuote) return TYPES[type].label;
     return model || TYPES[type].label;
   };
 
@@ -557,8 +603,9 @@
   // ------------------------------------------------------------------- input
   Game.prototype._hit = function (px, py) {
     // Topmost bubble first.
-    for (var i = this.bubbles.length - 1; i >= 0; i--) {
-      var b = this.bubbles[i];
+    var i, b;
+    for (i = this.bubbles.length - 1; i >= 0; i--) {
+      b = this.bubbles[i];
       if (b.dead) continue;
       if (px >= b.x - b.hw && px <= b.x + b.hw &&
           py >= b.y - b.hh && py <= b.y + b.hh) {
@@ -566,7 +613,18 @@
         return;
       }
     }
-    // Miss.
+    // Near-miss grace: a tap just outside a bubble's edge is a neutral
+    // no-op -- no hit, but no punishment either. Only a true whiff, nothing
+    // within the margin of any live bubble, breaks the combo below.
+    for (i = 0; i < this.bubbles.length; i++) {
+      b = this.bubbles[i];
+      if (b.dead) continue;
+      var cx = clamp(px, b.x - b.hw, b.x + b.hw);
+      var cy = clamp(py, b.y - b.hh, b.y + b.hh);
+      var dx = px - cx, dy = py - cy;
+      if (dx * dx + dy * dy <= CONFIG.missGrace * CONFIG.missGrace) return;
+    }
+    // True miss.
     this.combo = 0;
     this.comboTimer = 0;
     this.sound.miss();
@@ -583,20 +641,35 @@
     if (b.hp > 0) {
       // Tough bubble: cracked but not destroyed.
       b.scale = 1.16;
-      this.sound.smash(this.combo);
+      this.sound.smash(this.chain);
       return;
     }
 
     b.dead = true;
     this.smashed++;
+    // Speed combo: feeds only rage/meltdown pacing, unchanged by chains.
     this.combo++;
     this.comboTimer = CONFIG.comboWindow;
     if (this.combo > this.bestCombo) this.bestCombo = this.combo;
 
-    var mult = 1 + Math.floor(this.combo / 3) * 0.5; // combo multiplier
+    // Type chain: same-type kills grow the chain and the score multiplier;
+    // a different type restarts it at 1 (no penalty, only the bonus is
+    // gone). Golden bubbles are wildcards -- they extend whatever chain is
+    // running without ever breaking it.
+    if (b.golden) {
+      this.chain++;
+    } else if (b.type === this.chainType) {
+      this.chain++;
+    } else {
+      this.chain = 1;
+      this.chainType = b.type;
+    }
+    if (this.chain > this.bestChain) this.bestChain = this.chain;
+
+    var chainMult = Math.min(1 + 0.5 * (this.chain - 1), 4);
     var base = b.golden ? 120 : b.tough ? 40 : 15;
     if (this.inMeltdown) base *= 2;
-    var gained = Math.round(base * mult);
+    var gained = Math.round(base * chainMult);
     this.score += gained;
 
     this.rage = clamp(this.rage + CONFIG.ragePerSmash, 0, CONFIG.rageMax);
@@ -604,23 +677,32 @@
     // Bigger shockwave + shards on kill.
     this._burst(px, py, b.golden ? GOLD.color : m.color, b.golden ? 30 : 18);
     this.shockwaves.push({ x: px, y: py, r: 6, max: b.golden ? 130 : 74, a: 0.7 });
-    this.floaters.push(makeFloater(b.x, b.y, "+" + gained, b.golden ? GOLD.color : "#fff", b.golden ? 30 : 22));
+    var floaterText = "+" + gained + (this.chain > 1 ? " ×" + this.chain : "");
+    this.floaters.push(makeFloater(b.x, b.y, floaterText, b.golden ? GOLD.color : m.color, b.golden ? 30 : 22));
 
     if (b.golden) this.sound.bonus();
-    else this.sound.smash(this.combo);
+    else this.sound.smash(this.chain);
 
-    if (this.combo >= 3 && this.combo % 3 === 0) this._showCombo();
+    if (this.chain >= 3) this._showChain();
 
     if (this.rage >= CONFIG.rageMax && !this.inMeltdown) this._startMeltdown();
   };
 
-  Game.prototype._showCombo = function () {
+  // Flashes a big line through the existing #combo banner element. Shared by
+  // the chain, meltdown and SPIRAL feedback so there is one animated slot.
+  Game.prototype._showBanner = function (text, color) {
     var el = this.el.combo;
-    el.textContent = this.combo + "× COMBO";
+    el.textContent = text;
+    el.style.color = color || "";
     el.classList.remove("show");
     // force reflow to restart animation
     void el.offsetWidth;
     el.classList.add("show");
+  };
+
+  Game.prototype._showChain = function () {
+    var color = TYPES[this.chainType] ? TYPES[this.chainType].color : "";
+    this._showBanner("CHAIN ×" + this.chain + "!", color);
   };
 
   Game.prototype._startMeltdown = function () {
@@ -630,11 +712,41 @@
     this.rage = CONFIG.rageMax;
     this.shake = 24;
     this.sound.meltdown();
-    var el = this.el.combo;
-    el.textContent = "💥 MELTDOWN!";
-    el.classList.remove("show");
-    void el.offsetWidth;
-    el.classList.add("show");
+    // A SPIRAL in progress never overlaps a meltdown.
+    this.inSpiral = false;
+    this.spiralQueue.length = 0;
+    this._showBanner("💥 MELTDOWN!", "");
+  };
+
+  // The apology spiral: a brief wave of short, same-type bubbles in rapid
+  // succession -- the frustration pattern everyone knows, turned into a
+  // guaranteed big-chain moment. Never during a meltdown (see _startMeltdown
+  // and the timer gating in _update).
+  Game.prototype._startSpiral = function () {
+    var type, source;
+    this.spiralUsesQuotes = this.quotes.length > 0;
+    if (this.spiralUsesQuotes) {
+      // The sentence that drove the player up the wall comes back on loop.
+      type = this.quotes[0].type;
+      source = this.quotes;
+    } else {
+      type = pick(TYPE_ORDER);
+      var pool = (PHRASES_BY_TYPE[type] || []).slice()
+        .sort(function (a, b) { return a.text.length - b.text.length; });
+      source = pool.slice(0, Math.max(6, Math.ceil(pool.length * 0.4)));
+      if (!source.length) source = PHRASES_BY_TYPE[type] || PHRASES;
+    }
+
+    var count = Math.floor(rand(CONFIG.spiralCountMin, CONFIG.spiralCountMax + 1));
+    this.spiralQueue = [];
+    for (var i = 0; i < count; i++) this.spiralQueue.push(pick(source));
+    this.spiralType = type;
+    this.inSpiral = true;
+    this.spiralGapTimer = 0;
+
+    var model = this.models[TYPE_ORDER.indexOf(type)];
+    var label = (model || TYPES[type].label).toUpperCase();
+    this._showBanner("💬 " + label + " IS SPIRALING…", TYPES[type].color);
   };
 
   // --------------------------------------------------------------- particles
@@ -694,6 +806,27 @@
       if (this.comboTimer <= 0) this.combo = 0;
     }
 
+    if (this.escapeSoundCd > 0) this.escapeSoundCd -= dt;
+
+    // SPIRAL event: a wave of short same-type bubbles, gated off meltdown so
+    // the two big moments never overlap.
+    if (this.inSpiral) {
+      this.spiralGapTimer -= dt;
+      if (this.spiralGapTimer <= 0 && this.spiralQueue.length) {
+        var sp = this.spiralQueue.shift();
+        this._makeBubble(sp.text, sp.type || this.spiralType, false, false, this.spiralUsesQuotes);
+        this.sound.spiral();
+        this.spiralGapTimer = CONFIG.spiralGap;
+      }
+      if (!this.spiralQueue.length) {
+        this.inSpiral = false;
+        this.spiralTimer = rand(CONFIG.spiralMin, CONFIG.spiralMax);
+      }
+    } else if (!this.inMeltdown) {
+      this.spiralTimer -= dt;
+      if (this.spiralTimer <= 0) this._startSpiral();
+    }
+
     // Spawning.
     var d2 = this._difficulty();
     var interval = lerp(CONFIG.baseSpawn, CONFIG.minSpawn, d2);
@@ -717,6 +850,13 @@
       if (b.x > this.w - b.hw) { b.x = this.w - b.hw; b.vx = -Math.abs(b.vx); }
       if (b.dead || b.y < -b.hh - 20) {
         if (!b.dead) { // escaped unsmashed → break combo
+          if (this.combo > 0) {
+            this.floaters.push(makeFloater(b.x, 40, "got away!", "#8a83ad", 14));
+            if (this.escapeSoundCd <= 0) {
+              this.sound.escape();
+              this.escapeSoundCd = 0.2;
+            }
+          }
           this.combo = 0;
         }
         this.bubbles.splice(k, 1);
@@ -860,9 +1000,11 @@
     ctx.translate(b.x, b.y);
     ctx.scale(b.scale, b.scale);
 
-    // Glow.
+    // Glow. Bubbles matching the active chain type glow a bit stronger, so
+    // the eye can scan for the next chain-safe target like a match-3 game.
+    var chainActive = !b.golden && this.chain > 1 && b.type === this.chainType;
     ctx.shadowColor = glow;
-    ctx.shadowBlur = b.golden ? 28 : 16;
+    ctx.shadowBlur = b.golden ? 28 : chainActive ? 22 : 16;
 
     // Bubble body.
     var w = b.w, h = b.h, r = 16;

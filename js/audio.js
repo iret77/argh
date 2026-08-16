@@ -93,6 +93,16 @@
     this._tone(90, 0.12, 0.12, "sine", 60);
   };
 
+  /** A bubble escapes with a live combo: a duller, lower cousin of miss. */
+  SoundEngine.prototype.escape = function () {
+    this._tone(75, 0.16, 0.12, "sine", 45);
+  };
+
+  /** SPIRAL event: a short notification ping per bubble in the wave. */
+  SoundEngine.prototype.spiral = function () {
+    this._tone(760, 0.05, 0.1, "sine", 900);
+  };
+
   /** Meltdown begins: rising sweep. */
   SoundEngine.prototype.meltdown = function () {
     this._tone(160, 0.7, 0.3, "sawtooth", 880);
